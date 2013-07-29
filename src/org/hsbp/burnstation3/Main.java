@@ -5,9 +5,15 @@ import android.os.Bundle;
 import android.os.AsyncTask;
 import android.widget.*;
 import java.util.*;
+import java.net.*;
+import java.io.*;
+import org.apache.commons.io.IOUtils;
+import org.json.*;
 
 public class Main extends Activity
 {
+    public static final String UTF_8 = "UTF-8";
+
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -25,24 +31,53 @@ public class Main extends Activity
     }
 
     private class AlbumListFillTask extends AsyncTask<Void, Void, List<? extends Map<String, ?>>> {
+        public final static String NAME = "name";
+        public final static String ARTIST_NAME = "artist_name";
+
         @Override
         protected List<? extends Map<String, ?>> doInBackground(Void... ignored) {
             List<Map<String, String>> albums = new ArrayList<Map<String, String>>();
-            // TODO download into albums
-            Map<String, String> album = new HashMap<String, String>();
-            album.put("name", "Test album title");
-            album.put("artist", "Test album artist");
-            albums.add(album);
+            try {
+                JSONArray api_result = getArrayFromApi("albums", "&order=popularity_week");
+                for (int i = 0; i < api_result.length(); i++) {
+                    try {
+                        Map<String, String> album = new HashMap<String, String>();
+                        JSONObject item = api_result.getJSONObject(i);
+                        album.put(ARTIST_NAME, item.getString(ARTIST_NAME));
+                        album.put(NAME, item.getString(NAME));
+                        albums.add(album);
+                    } catch (JSONException je) {
+                        je.printStackTrace(); // TODO report API error
+                    }
+                }
+            } catch (JSONException je) {
+                je.printStackTrace(); // TODO report API error
+            } catch (IOException ioe) {
+                ioe.printStackTrace(); // TODO report API error
+            }
             return albums;
         }
 
         @Override
         protected void onPostExecute(List<? extends Map<String, ?>> result) {
             ListView lv = (ListView)findViewById(R.id.albums);
-            final String[] map_from = {"name", "artist"};
+            final String[] map_from = {NAME, ARTIST_NAME};
             final int[] map_to = {R.id.album_name, R.id.album_artist};
             lv.setAdapter(new SimpleAdapter(Main.this, result,
                         R.layout.albums_item, map_from, map_to));
+        }
+    }
+
+    private static JSONArray getArrayFromApi(String resource, String parameters)
+        throws IOException, JSONException {
+        URL api = new URL("http://10.0.2.2:5000/albums.json"); // TODO use real API
+        HttpURLConnection urlConnection = (HttpURLConnection) api.openConnection();
+        try {
+            String response = IOUtils.toString(urlConnection.getInputStream(), UTF_8);
+            JSONObject object = (JSONObject) new JSONTokener(response).nextValue();
+            return object.getJSONArray("results");
+        } finally {
+            urlConnection.disconnect();
         }
     }
 }
