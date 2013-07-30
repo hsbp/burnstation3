@@ -6,9 +6,10 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 public class Track {
-    protected String artist_name, name;
+    protected String artist_name, name, id;
     protected URL audio;
     protected int duration;
+    public final static String ID = "id";
     public final static String NAME = "name";
     public final static String ARTIST_NAME = "artist_name";
     public final static String AUDIO = "audio";
@@ -20,6 +21,7 @@ public class Track {
     public static Track fromJSONObject(JSONObject obj) throws JSONException,
            MalformedURLException {
         final Track track = new Track();
+        track.id = obj.getString(ID);
         track.name = obj.getString(NAME);
         track.artist_name = obj.getString(ARTIST_NAME);
         track.duration = obj.getInt(DURATION);
