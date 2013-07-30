@@ -4,13 +4,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.widget.*;
+import android.view.View;
 import java.util.*;
 import java.net.*;
 import java.io.*;
 import org.apache.commons.io.IOUtils;
 import org.json.*;
 
-public class Main extends Activity
+public class Main extends Activity implements AdapterView.OnItemClickListener
 {
     public final static String ID = "id";
     public static final String UTF_8 = "UTF-8";
@@ -67,7 +68,13 @@ public class Main extends Activity
             final int[] map_to = {R.id.album_name, R.id.album_artist};
             lv.setAdapter(new SimpleAdapter(Main.this, result,
                         R.layout.albums_item, map_from, map_to));
+            lv.setOnItemClickListener(Main.this);
         }
+    }
+
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        Map<String, String> item = (Map<String, String>)parent.getItemAtPosition(position);
+        System.err.println("ID: " + item.get(ID)); // TODO load tracks
     }
 
     private static JSONArray getArrayFromApi(String resource, String parameters)
