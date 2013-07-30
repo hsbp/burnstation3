@@ -12,6 +12,7 @@ import org.json.*;
 
 public class Main extends Activity
 {
+    public final static String ID = "id";
     public static final String UTF_8 = "UTF-8";
 
     /** Called when the activity is first created. */
@@ -45,6 +46,7 @@ public class Main extends Activity
                         JSONObject item = api_result.getJSONObject(i);
                         album.put(ARTIST_NAME, item.getString(ARTIST_NAME));
                         album.put(NAME, item.getString(NAME));
+                        album.put(ID, item.getString(ID));
                         albums.add(album);
                     } catch (JSONException je) {
                         je.printStackTrace(); // TODO report API error
