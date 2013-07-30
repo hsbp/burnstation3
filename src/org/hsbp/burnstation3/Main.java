@@ -79,6 +79,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
                 break;
             case R.id.tracks:
                 Track track = (Track)item;
+                track.prepare();
                 playList.add(track);
                 // TODO start playing it if nothing else is being played
                 break;
