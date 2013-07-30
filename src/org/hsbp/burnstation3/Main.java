@@ -95,7 +95,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
                 for (int i = 0; i < api_result.length(); i++) {
                     try {
                         JSONObject item = api_result.getJSONObject(i);
-                        tracks.add(Track.fromJSONObject(item));
+                        tracks.add(Track.fromJSONObject(Main.this, item));
                     } catch (JSONException je) {
                         je.printStackTrace(); // TODO report API error
                     }

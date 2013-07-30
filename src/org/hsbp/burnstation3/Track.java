@@ -1,5 +1,6 @@
 package org.hsbp.burnstation3;
 
+import android.content.Context;
 import java.net.URL;
 import java.net.MalformedURLException;
 import org.json.JSONObject;
@@ -18,7 +19,7 @@ public class Track {
 
     protected Track() {}
 
-    public static Track fromJSONObject(JSONObject obj) throws JSONException,
+    public static Track fromJSONObject(Context ctx, JSONObject obj) throws JSONException,
            MalformedURLException {
         final Track track = new Track();
         track.id = obj.getString(ID);
