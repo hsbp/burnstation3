@@ -13,6 +13,7 @@ import org.json.*;
 
 public class Main extends Activity implements AdapterView.OnItemClickListener
 {
+    public final static String CLIENT_ID = "5559df65";
     public final static String ID = "id";
     public static final String UTF_8 = "UTF-8";
 
@@ -79,7 +80,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
 
     private static JSONArray getArrayFromApi(String resource, String parameters)
         throws IOException, JSONException {
-        URL api = new URL("http://10.0.2.2:5000/albums.json"); // TODO use real API
+        URL api = new URL("http://api.jamendo.com/v3.0/" + resource +
+                ("/?client_id=" + CLIENT_ID + "&format=json") + parameters);
         HttpURLConnection urlConnection = (HttpURLConnection) api.openConnection();
         try {
             String response = IOUtils.toString(urlConnection.getInputStream(), UTF_8);
