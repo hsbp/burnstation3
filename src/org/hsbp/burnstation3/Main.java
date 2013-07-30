@@ -16,6 +16,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
     public final static String CLIENT_ID = "5559df65";
     public final static String ID = "id";
     public static final String UTF_8 = "UTF-8";
+    protected ArrayAdapter<Track> playList;
 
     /** Called when the activity is first created. */
     @Override
@@ -23,13 +24,10 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        String[] test = {"foo", "bar", "baz"};
-        int[] widgets = {R.id.playlist};
-        for (int widget : widgets) {
-            ListView lv = (ListView)findViewById(widget);
-            lv.setAdapter(new ArrayAdapter<String>(
-                        this, android.R.layout.simple_list_item_1, test));
-        }
+        ListView lv = (ListView)findViewById(R.id.playlist);
+        playList = new ArrayAdapter<Track>(
+                    this, android.R.layout.simple_list_item_1, new ArrayList<Track>());
+        lv.setAdapter(playList);
         new AlbumListFillTask().execute();
     }
 
@@ -74,9 +72,16 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // TODO handle tracklist clicks
-        Map<String, String> item = (Map<String, String>)parent.getItemAtPosition(position);
-        new TrackListFillTask().execute(item.get(ID));
+        Object item = parent.getItemAtPosition(position);
+        switch (parent.getId()) {
+            case R.id.albums:
+                new TrackListFillTask().execute(((Map<String, String>)item).get(ID));
+                break;
+            case R.id.tracks:
+                playList.add((Track)item);
+                // TODO start playing it if nothing is else is being played
+                break;
+        }
     }
 
     private class TrackListFillTask extends AsyncTask<String, Void, List<Track>> {
