@@ -24,7 +24,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         String[] test = {"foo", "bar", "baz"};
-        int[] widgets = {R.id.tracks, R.id.playlist};
+        int[] widgets = {R.id.playlist};
         for (int widget : widgets) {
             ListView lv = (ListView)findViewById(widget);
             lv.setAdapter(new ArrayAdapter<String>(
@@ -74,8 +74,41 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
     }
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // TODO handle tracklist clicks
         Map<String, String> item = (Map<String, String>)parent.getItemAtPosition(position);
-        System.err.println("ID: " + item.get(ID)); // TODO load tracks
+        new TrackListFillTask().execute(item.get(ID));
+    }
+
+    private class TrackListFillTask extends AsyncTask<String, Void, List<Track>> {
+
+        @Override
+        protected List<Track> doInBackground(String... album_id) {
+            List<Track> tracks = new ArrayList<Track>();
+            try {
+                JSONArray api_result = getArrayFromApi("tracks", "&album_id=" + album_id[0]);
+                for (int i = 0; i < api_result.length(); i++) {
+                    try {
+                        JSONObject item = api_result.getJSONObject(i);
+                        tracks.add(Track.fromJSONObject(item));
+                    } catch (JSONException je) {
+                        je.printStackTrace(); // TODO report API error
+                    }
+                }
+            } catch (JSONException je) {
+                je.printStackTrace(); // TODO report API error
+            } catch (IOException ioe) {
+                ioe.printStackTrace(); // TODO report API error
+            }
+            return tracks;
+        }
+
+        @Override
+        protected void onPostExecute(List<Track> result) {
+            ListView lv = (ListView)findViewById(R.id.tracks);
+            lv.setAdapter(new ArrayAdapter(Main.this,
+                        android.R.layout.simple_list_item_1, result));
+            lv.setOnItemClickListener(Main.this);
+        }
     }
 
     private static JSONArray getArrayFromApi(String resource, String parameters)
