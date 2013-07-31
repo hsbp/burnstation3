@@ -40,7 +40,6 @@ public class Player extends ArrayAdapter<Track> {
             ui.updateElapsed(track.getDuration() / 2); // TODO update continuously
         } else {
             performPlay();
-            ui.updateTotal(track.getDuration());
             ui.updateElapsed(track.getDuration() / 2); // TODO update continuously
         }
     }
