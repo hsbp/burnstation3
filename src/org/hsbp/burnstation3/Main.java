@@ -83,7 +83,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
                 Track track = (Track)item;
                 track.prepare();
                 playList.add(track);
-                // TODO start playing it if nothing else is being played
+                playClicked(view);
                 break;
         }
     }
