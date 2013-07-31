@@ -3,15 +3,17 @@ package org.hsbp.burnstation3;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.AudioManager;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 
-public class Player extends ArrayAdapter<Track> {
+public class Player extends ArrayAdapter<Track> implements Runnable {
 
     protected MediaPlayer mp = null;
     protected Track currentTrack = null;
     protected final PlayerUI ui;
+    protected final Handler handler = new Handler();
 
     public Player(Context ctx) {
         super(ctx, android.R.layout.simple_list_item_1, new ArrayList<Track>());
@@ -37,10 +39,8 @@ public class Player extends ArrayAdapter<Track> {
                 }
             }).start();
             ui.updateTotal(track.getDuration());
-            ui.updateElapsed(track.getDuration() / 2); // TODO update continuously
         } else {
             performPlay();
-            ui.updateElapsed(track.getDuration() / 2); // TODO update continuously
         }
     }
 
@@ -56,5 +56,14 @@ public class Player extends ArrayAdapter<Track> {
 
     protected synchronized void performPlay() {
         mp.start();
+        handler.post(this);
+    }
+
+    public synchronized void run() {
+        if (mp == null) return;
+        try {
+            ui.updateElapsed(mp.getCurrentPosition() / 1000);
+            if (mp.isPlaying()) handler.postDelayed(this, 200);
+        } catch (IllegalStateException ise) {}
     }
 }
