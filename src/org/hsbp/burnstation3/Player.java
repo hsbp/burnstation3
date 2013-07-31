@@ -8,31 +8,31 @@ import android.os.PowerManager;
 import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 
-public class Player extends ArrayAdapter<Track> implements Runnable,
+public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         MediaPlayer.OnCompletionListener {
 
     protected MediaPlayer mp = null;
-    protected Track currentTrack = null;
+    protected Item currentItem = null;
     protected final PlayerUI ui;
     protected final Handler handler = new Handler();
 
     public Player(Context ctx) {
-        super(ctx, android.R.layout.simple_list_item_1, new ArrayList<Track>());
+        super(ctx, android.R.layout.simple_list_item_1, new ArrayList<Player.Item>());
         ui = (PlayerUI)ctx;
     }
 
-    public synchronized void play(final Track track, boolean forceReplace) {
-        if (mp != null && track != currentTrack && forceReplace) {
+    public synchronized void play(final Item item, boolean forceReplace) {
+        if (mp != null && item != currentItem && forceReplace) {
             mp.release();
             mp = null;
         }
         if (mp == null) {
-            currentTrack = track;
+            currentItem = item;
             new Thread(new Runnable() {
                 public void run() {
                     synchronized (Player.this) {
                         final Context ctx = getContext();
-                        mp = MediaPlayer.create(ctx, track.getUri());
+                        mp = MediaPlayer.create(ctx, item.getTrack().getUri());
                         mp.setOnCompletionListener(Player.this);
                         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         mp.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
@@ -40,7 +40,7 @@ public class Player extends ArrayAdapter<Track> implements Runnable,
                     }
                 }
             }).start();
-            ui.updateTotal(track.getDuration());
+            ui.updateTotal(item.getTrack().getDuration());
         } else {
             performPlay();
         }
@@ -77,18 +77,39 @@ public class Player extends ArrayAdapter<Track> implements Runnable,
     }
 
     public synchronized void playPreviousTrack() {
-        if (currentTrack == null) return;
-        int pos = getPosition(currentTrack) - 1;
+        if (currentItem == null) return;
+        int pos = getPosition(currentItem) - 1;
         if (pos >= 0) {
             play(getItem(pos), true);
         }
     }
 
     public synchronized void playNextTrack() {
-        if (currentTrack == null) return;
-        int pos = getPosition(currentTrack) + 1;
+        if (currentItem == null) return;
+        int pos = getPosition(currentItem) + 1;
         if (pos < getCount()) {
             play(getItem(pos), true);
+        }
+    }
+
+    public void add(Track track) {
+        add(new Item(track));
+    }
+
+    protected static class Item {
+        protected final Track track;
+
+        public Item(Track track) {
+            this.track = track;
+        }
+
+        public Track getTrack() {
+            return track;
+        }
+
+        @Override
+        public String toString() {
+            return track.getArtistName() + ": " + track.getName();
         }
     }
 }

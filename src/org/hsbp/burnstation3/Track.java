@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 public class Track implements Runnable {
-    protected String artist_name, name, id;
+    protected String artistName, name, id;
     protected File localFile;
     protected URL audio;
     protected int duration;
@@ -37,7 +37,7 @@ public class Track implements Runnable {
         cacheDir.mkdirs();
         track.localFile = new File(cacheDir, track.id + FILE_SUFFIX);
         track.name = obj.getString(NAME);
-        track.artist_name = obj.getString(ARTIST_NAME);
+        track.artistName = obj.getString(ARTIST_NAME);
         track.duration = obj.getInt(DURATION);
         track.audio = new URL(obj.getString(AUDIO));
         return track;
@@ -98,5 +98,13 @@ public class Track implements Runnable {
 
     public int getDuration() {
         return duration;
+    }
+
+    public String getArtistName() {
+        return artistName;
+    }
+
+    public String getName() {
+        return name;
     }
 }

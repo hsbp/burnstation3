@@ -89,7 +89,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
                 playClicked(view);
                 break;
             case R.id.playlist:
-                player.play((Track)item, true);
+                player.play((Player.Item)item, true);
                 break;
         }
     }
