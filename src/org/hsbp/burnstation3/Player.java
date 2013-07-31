@@ -11,9 +11,11 @@ public class Player extends ArrayAdapter<Track> {
 
     protected MediaPlayer mp = null;
     protected Track currentTrack = null;
+    protected final PlayerUI ui;
 
     public Player(Context ctx) {
         super(ctx, android.R.layout.simple_list_item_1, new ArrayList<Track>());
+        ui = (PlayerUI)ctx;
     }
 
     public synchronized void play(final Track track, boolean forceReplace) {
@@ -34,8 +36,12 @@ public class Player extends ArrayAdapter<Track> {
                     }
                 }
             }).start();
+            ui.updateTotal(track.getDuration());
+            ui.updateElapsed(track.getDuration() / 2); // TODO update continuously
         } else {
             mp.start();
+            ui.updateTotal(track.getDuration());
+            ui.updateElapsed(track.getDuration() / 2); // TODO update continuously
         }
     }
 

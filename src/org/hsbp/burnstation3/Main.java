@@ -11,10 +11,11 @@ import java.io.*;
 import org.apache.commons.io.IOUtils;
 import org.json.*;
 
-public class Main extends Activity implements AdapterView.OnItemClickListener
+public class Main extends Activity implements AdapterView.OnItemClickListener, PlayerUI
 {
     public final static String CLIENT_ID = "5559df65";
     public final static String ID = "id";
+    public final static String TIME_FMT = "%d:%02d";
     public static final String UTF_8 = "UTF-8";
     protected Player player;
 
@@ -160,5 +161,22 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
         if (pos < player.getCount()) {
             player.play(player.getItem(pos), true);
         }
+    }
+
+    public void updateElapsed(int time) {
+        SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
+        sb.setProgress(time);
+        updateTextViewTime(R.id.player_elapsed, time);
+    }
+
+    public void updateTotal(int time) {
+        SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
+        sb.setMax(time);
+        updateTextViewTime(R.id.player_total, time);
+    }
+
+    protected void updateTextViewTime(int res, int time) {
+        TextView tv = (TextView)findViewById(res);
+        tv.setText(String.format(TIME_FMT, time / 60, time % 60));
     }
 }

@@ -95,4 +95,8 @@ public class Track implements Runnable {
         run();
         return Uri.fromFile(localFile);
     }
+
+    public int getDuration() {
+        return duration;
+    }
 }
