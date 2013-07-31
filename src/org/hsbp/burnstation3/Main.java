@@ -29,6 +29,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
         playList = new ArrayAdapter<Track>(
                     this, android.R.layout.simple_list_item_1, new ArrayList<Track>());
         lv.setAdapter(playList);
+        lv.setOnItemClickListener(this);
         new AlbumListFillTask().execute();
         player = new Player();
     }
@@ -84,6 +85,9 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
                 track.prepare();
                 playList.add(track);
                 playClicked(view);
+                break;
+            case R.id.playlist:
+                player.play(this, (Track)item, true);
                 break;
         }
     }
