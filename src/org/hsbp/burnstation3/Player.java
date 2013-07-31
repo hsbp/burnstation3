@@ -3,6 +3,7 @@ package org.hsbp.burnstation3;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.AudioManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.widget.ArrayAdapter;
@@ -30,14 +31,37 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         if (mp == null) {
             currentItem = item;
             new Thread(new Runnable() {
+                protected static final int TRIAL_COUNT_TRESHOLD = 50;
+
                 public void run() {
                     synchronized (Player.this) {
                         final Context ctx = getContext();
-                        mp = MediaPlayer.create(ctx, item.getTrack().getUri());
-                        mp.setOnCompletionListener(Player.this);
-                        mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-                        mp.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-                        performPlay();
+                        int trialCount = 0;
+                        Uri track_uri = item.getTrack().getUri();
+                        while (true) {
+                            try {
+                                mp = MediaPlayer.create(ctx, track_uri);
+								mp.setOnCompletionListener(Player.this);
+								mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+								mp.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+								performPlay();
+								return;
+                            } catch (Exception e) {
+								if (mp != null) {
+									mp.release();
+									mp = null;
+								}
+								try {
+	                                Thread.sleep(200);
+								} catch (InterruptedException ie) {}
+                                trialCount++;
+                                if (trialCount >= TRIAL_COUNT_TRESHOLD) {
+                                    item.setPlaying(false);
+                                    currentItem = null;
+                                    return; // TODO notify user
+                                }
+                            }
+                        }
                     }
                 }
             }).start();
