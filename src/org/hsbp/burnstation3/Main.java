@@ -150,21 +150,11 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     }
 
     public void previousClicked(View view) {
-        Track ct = player.getCurrentTrack();
-        if (ct == null) return;
-        int pos = player.getPosition(ct) - 1;
-        if (pos >= 0) {
-            player.play(player.getItem(pos), true);
-        }
+        player.playPreviousTrack();
     }
 
     public void nextClicked(View view) {
-        Track ct = player.getCurrentTrack();
-        if (ct == null) return;
-        int pos = player.getPosition(ct) + 1;
-        if (pos < player.getCount()) {
-            player.play(player.getItem(pos), true);
-        }
+        player.playNextTrack();
     }
 
     public void updateElapsed(int time) {

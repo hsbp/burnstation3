@@ -50,10 +50,6 @@ public class Player extends ArrayAdapter<Track> implements Runnable {
         } catch (IllegalStateException ise) {}
     }
 
-    public synchronized Track getCurrentTrack() {
-        return currentTrack;
-    }
-
     protected synchronized void performPlay() {
         mp.start();
         handler.post(this);
@@ -72,5 +68,21 @@ public class Player extends ArrayAdapter<Track> implements Runnable {
         try {
             mp.seekTo(time * 1000);
         } catch (IllegalStateException ise) {}
+    }
+
+    public synchronized void playPreviousTrack() {
+        if (currentTrack == null) return;
+        int pos = getPosition(currentTrack) - 1;
+        if (pos >= 0) {
+            play(getItem(pos), true);
+        }
+    }
+
+    public synchronized void playNextTrack() {
+        if (currentTrack == null) return;
+        int pos = getPosition(currentTrack) + 1;
+        if (pos < getCount()) {
+            play(getItem(pos), true);
+        }
     }
 }
