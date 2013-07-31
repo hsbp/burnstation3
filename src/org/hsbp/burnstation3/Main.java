@@ -26,7 +26,11 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     public final static String TIME_FMT = "%d:%02d";
     public final static String NAME = "name";
     public final static String ARTIST_NAME = "artist_name";
-    public final static String[] ALBUM_FIELDS = {ARTIST_NAME, NAME, ZIP, ID};
+    public final static String RELEASE_DATE = "releasedate";
+    public final static String IMAGE = "image";
+    public final static String[] ALBUM_FIELDS = {ARTIST_NAME, NAME, ZIP, ID, RELEASE_DATE};
+    public final static String ALBUM_COVER_CACHE_DIR = "org.hsbp.burnstation3.album_cover.cache";
+    public final static String ALBUM_COVER_FILE_SUFFIX = ".jpg";
     public static final String UTF_8 = "UTF-8";
     protected Player player;
     protected boolean seeker_update_enabled = true;
@@ -51,15 +55,25 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
         @Override
         protected List<? extends Map<String, ?>> doInBackground(Void... ignored) {
-            List<Map<String, String>> albums = new ArrayList<Map<String, String>>();
+            List<Map<String, Object>> albums = new ArrayList<Map<String, Object>>();
             try {
                 JSONArray api_result = getArrayFromApi("albums", "&order=popularity_week");
+                File cacheDir = new File(getCacheDir(), ALBUM_COVER_CACHE_DIR);
+                cacheDir.mkdirs();
                 for (int i = 0; i < api_result.length(); i++) {
                     try {
-                        Map<String, String> album = new HashMap<String, String>();
+                        Map<String, Object> album = new HashMap<String, Object>();
                         JSONObject item = api_result.getJSONObject(i);
                         for (String field : ALBUM_FIELDS) {
                             album.put(field, item.getString(field));
+                        }
+                        try {
+                            File cover = new File(cacheDir,
+                                    (String)album.get(ID) + ALBUM_COVER_FILE_SUFFIX);
+                            Downloader.download(new URL(item.getString(IMAGE)), cover);
+                            album.put(IMAGE, cover.getAbsolutePath());
+                        } catch (IOException ioe) {
+                            album.put(IMAGE, R.drawable.burnstation);
                         }
                         albums.add(album);
                     } catch (JSONException je) {
@@ -77,8 +91,9 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
         @Override
         protected void onPostExecute(List<? extends Map<String, ?>> result) {
             ListView lv = (ListView)findViewById(R.id.albums);
-            final String[] map_from = {NAME, ARTIST_NAME};
-            final int[] map_to = {R.id.album_name, R.id.album_artist};
+            final String[] map_from = {NAME, ARTIST_NAME, IMAGE, RELEASE_DATE};
+            final int[] map_to = {R.id.album_name, R.id.album_artist,
+                R.id.album_image, R.id.album_release_date};
             lv.setAdapter(new SimpleAdapter(Main.this, result,
                         R.layout.albums_item, map_from, map_to));
             lv.setOnItemClickListener(Main.this);

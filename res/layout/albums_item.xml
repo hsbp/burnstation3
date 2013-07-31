@@ -1,21 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="5dp"
     >
-<TextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/album_name"
-    android:textSize="20sp"
-    android:textStyle="bold"
-    />
-<TextView
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/album_artist"
-    android:textSize="14sp"
-    />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:id="@+id/album_image"
+        />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="5dp"
+        >
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/album_name"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/album_artist"
+            android:textSize="18sp"
+            />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/release_date"
+            android:layout_marginTop="8sp"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/album_release_date"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            />
+    </LinearLayout>
 </LinearLayout>
