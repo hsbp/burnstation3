@@ -1,10 +1,16 @@
 package org.hsbp.burnstation3;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.graphics.Point;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.widget.*;
 import android.view.View;
+import android.view.Display;
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -198,5 +204,38 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
     public void onStopTrackingTouch(SeekBar seekBar) {
         seeker_update_enabled = true;
+    }
+
+    public void showAlbumZipAccess(View view) {
+        new AlbumZipAccessTask().execute();
+    }
+
+    private class AlbumZipAccessTask extends AsyncTask<Void, Void, Drawable> {
+        @Override
+        protected Drawable doInBackground(Void... ignored) {
+            try {
+                Display display = getWindowManager().getDefaultDisplay();
+                Point size = new Point();
+                display.getSize(size);
+                int dimension = Math.min(size.x, size.y) / 4 * 3;
+                return new BitmapDrawable(getResources(),
+                        QREncoder.encodeAsBitmap(currentAlbumZip, dimension));
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(Drawable result) {
+            if (result == null) return;
+            final ImageView img = new ImageView(Main.this);
+            img.setImageDrawable(result);
+            new AlertDialog.Builder(Main.this)
+                .setTitle(currentAlbumZip)
+                .setView(img)
+                .setNeutralButton(android.R.string.ok, null)
+                .show();
+        }
     }
 }

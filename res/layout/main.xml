@@ -25,6 +25,13 @@
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="Download full album"
+                android:onClick="showAlbumZipAccess"
+                android:layout_marginRight="25px"
+                />
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:text="Enqueue all tracks"
                 android:onClick="enqueueAllTracks"
                 />
