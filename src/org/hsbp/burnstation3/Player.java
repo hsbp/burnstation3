@@ -23,6 +23,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
 
     public synchronized void play(final Item item, boolean forceReplace) {
         if (mp != null && item != currentItem && forceReplace) {
+            currentItem.setPlaying(false);
             mp.release();
             mp = null;
         }
@@ -40,6 +41,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
                     }
                 }
             }).start();
+            item.setPlaying(true);
             ui.updateTotal(item.getTrack().getDuration());
         } else {
             performPlay();
@@ -73,6 +75,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
     }
 
     public void onCompletion(MediaPlayer mp) {
+        currentItem.setPlaying(false);
         playNextTrack();
     }
 
@@ -96,8 +99,9 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         add(new Item(track));
     }
 
-    protected static class Item {
+    protected class Item {
         protected final Track track;
+        protected boolean playing = false;
 
         public Item(Track track) {
             this.track = track;
@@ -107,9 +111,17 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
             return track;
         }
 
+        public void setPlaying(boolean value) {
+            if (value != playing) {
+                playing = value;
+                notifyDataSetChanged();
+            }
+        }
+
         @Override
         public String toString() {
-            return track.getArtistName() + ": " + track.getName();
+            return (playing ? "\u25B6 " : "") +
+                track.getArtistName() + ": " + track.getName();
         }
     }
 }
