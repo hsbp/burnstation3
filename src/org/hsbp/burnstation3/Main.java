@@ -16,6 +16,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
     public final static String CLIENT_ID = "5559df65";
     public final static String ID = "id";
     public static final String UTF_8 = "UTF-8";
+    protected Player player;
     protected ArrayAdapter<Track> playList;
 
     /** Called when the activity is first created. */
@@ -29,6 +30,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
                     this, android.R.layout.simple_list_item_1, new ArrayList<Track>());
         lv.setAdapter(playList);
         new AlbumListFillTask().execute();
+        player = new Player();
     }
 
     private class AlbumListFillTask extends AsyncTask<Void, Void, List<? extends Map<String, ?>>> {
@@ -130,5 +132,10 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    public void playClicked(View view) {
+        if (playList.getCount() == 0) return;
+        player.play(this, playList.getItem(0));
     }
 }
