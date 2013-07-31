@@ -2,6 +2,7 @@ package org.hsbp.burnstation3;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
@@ -11,6 +12,7 @@ import android.os.AsyncTask;
 import android.widget.*;
 import android.view.View;
 import android.view.Display;
+import android.view.Window;
 import java.util.*;
 import java.net.*;
 import java.io.*;
@@ -18,7 +20,7 @@ import org.apache.commons.io.IOUtils;
 import org.json.*;
 
 public class Main extends Activity implements AdapterView.OnItemClickListener,
-       PlayerUI, SeekBar.OnSeekBarChangeListener
+       PlayerUI, SeekBar.OnSeekBarChangeListener, AdapterView.OnItemSelectedListener
 {
     public final static String CLIENT_ID = "5559df65";
     public final static String ID = "id";
@@ -32,6 +34,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     public final static String ALBUM_COVER_CACHE_DIR = "org.hsbp.burnstation3.album_cover.cache";
     public final static String ALBUM_COVER_FILE_SUFFIX = ".jpg";
     public static final String UTF_8 = "UTF-8";
+    protected static Context staticContext;
     protected Player player;
     protected boolean seeker_update_enabled = true;
     protected String currentAlbumZip = null;
@@ -41,24 +44,59 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        staticContext = this;
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         ListView lv = (ListView)findViewById(R.id.playlist);
         player = new Player(this);
         lv.setAdapter(player);
         lv.setOnItemClickListener(this);
-        new AlbumListFillTask().execute();
         SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
         sb.setOnSeekBarChangeListener(this);
+        Spinner albumsOrder = (Spinner)findViewById(R.id.albums_order);
+        ArrayAdapter<AlbumsOrder> albumsOrderAdapter = new ArrayAdapter<AlbumsOrder>(
+                this, android.R.layout.simple_spinner_dropdown_item, AlbumsOrder.values());
+        albumsOrder.setAdapter(albumsOrderAdapter);
+        albumsOrder.setOnItemSelectedListener(this);
+        albumsOrder.setSelection(0);
     }
 
-    private class AlbumListFillTask extends AsyncTask<Void, Void, List<? extends Map<String, ?>>> {
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        AlbumsOrder order = (AlbumsOrder)parent.getSelectedItem();
+        new AlbumListFillTask().execute(order);
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {}
+
+    protected enum AlbumsOrder {
+        POPULARITY_WEEK(R.string.albums_order_popularity_week),
+        POPULARITY_MONTH(R.string.albums_order_popularity_month),
+        POPULARITY_TOTAL(R.string.albums_order_popularity_total),
+        RELEASEDATE_DESC(R.string.albums_order_releasedate_desc);
+
+        private int res;
+
+        private AlbumsOrder(int res) {
+            this.res = res;
+        }
+
+        public String getValue() {
+            return super.toString().toLowerCase();
+        }
 
         @Override
-        protected List<? extends Map<String, ?>> doInBackground(Void... ignored) {
+        public String toString() {
+            return staticContext.getString(res);
+        }
+    }
+
+    private class AlbumListFillTask extends AsyncTask<AlbumsOrder, Void, List<? extends Map<String, ?>>> {
+
+        @Override
+        protected List<? extends Map<String, ?>> doInBackground(AlbumsOrder... order) {
             List<Map<String, Object>> albums = new ArrayList<Map<String, Object>>();
             try {
-                JSONArray api_result = getArrayFromApi("albums", "&order=popularity_week");
+                JSONArray api_result = getArrayFromApi("albums", "&order=" + order[0].getValue());
                 File cacheDir = new File(getCacheDir(), ALBUM_COVER_CACHE_DIR);
                 cacheDir.mkdirs();
                 for (int i = 0; i < api_result.length(); i++) {

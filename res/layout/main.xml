@@ -4,12 +4,25 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     >
-    <ListView
-		android:id="@+id/albums"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
 		android:layout_weight="1"
-        />
+        >
+        <Spinner
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/albums_order"
+            android:drawSelectorOnTop="true"
+            />
+        <ListView
+            android:id="@+id/albums"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
