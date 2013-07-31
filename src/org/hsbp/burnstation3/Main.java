@@ -162,12 +162,12 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
             SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
             sb.setProgress(time);
         }
-        updateTextViewTime(R.id.player_elapsed, time);
+        updateTextViewTime(R.id.player_elapsed, time / 1000);
     }
 
     public void updateTotal(int time) {
         SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
-        sb.setMax(time);
+        sb.setMax(time * 1000);
         updateTextViewTime(R.id.player_total, time);
     }
 

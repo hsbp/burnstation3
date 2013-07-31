@@ -58,7 +58,7 @@ public class Player extends ArrayAdapter<Track> implements Runnable {
     public synchronized void run() {
         if (mp == null) return;
         try {
-            ui.updateElapsed(mp.getCurrentPosition() / 1000);
+            ui.updateElapsed(mp.getCurrentPosition());
             if (mp.isPlaying()) handler.postDelayed(this, 200);
         } catch (IllegalStateException ise) {}
     }
@@ -66,7 +66,7 @@ public class Player extends ArrayAdapter<Track> implements Runnable {
     public synchronized void seek(int time) {
         if (mp == null) return;
         try {
-            mp.seekTo(time * 1000);
+            mp.seekTo(time);
         } catch (IllegalStateException ise) {}
     }
 
