@@ -32,6 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/av_previous"
+                android:onClick="previousClicked"
                 android:layout_marginRight="25px"
                 />
             <ImageButton
@@ -52,6 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/av_next"
+                android:onClick="nextClicked"
                 android:layout_marginRight="25px"
                 />
         </LinearLayout>

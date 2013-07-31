@@ -37,4 +37,8 @@ public class Player {
             if (mp != null) mp.pause();
         } catch (IllegalStateException ise) {}
     }
+
+    public synchronized Track getCurrentTrack() {
+        return currentTrack;
+    }
 }
