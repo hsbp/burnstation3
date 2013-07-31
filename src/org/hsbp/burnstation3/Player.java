@@ -32,14 +32,14 @@ public class Player extends ArrayAdapter<Track> {
                         mp = MediaPlayer.create(ctx, track.getUri());
                         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         mp.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
-                        mp.start();
+                        performPlay();
                     }
                 }
             }).start();
             ui.updateTotal(track.getDuration());
             ui.updateElapsed(track.getDuration() / 2); // TODO update continuously
         } else {
-            mp.start();
+            performPlay();
             ui.updateTotal(track.getDuration());
             ui.updateElapsed(track.getDuration() / 2); // TODO update continuously
         }
@@ -53,5 +53,9 @@ public class Player extends ArrayAdapter<Track> {
 
     public synchronized Track getCurrentTrack() {
         return currentTrack;
+    }
+
+    protected synchronized void performPlay() {
+        mp.start();
     }
 }
