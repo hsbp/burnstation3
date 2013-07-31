@@ -24,6 +24,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     public final static String ID = "id";
     public final static String ZIP = "zip";
     public final static String TIME_FMT = "%d:%02d";
+    public final static String NAME = "name";
+    public final static String ARTIST_NAME = "artist_name";
     public static final String UTF_8 = "UTF-8";
     protected Player player;
     protected boolean seeker_update_enabled = true;
@@ -45,8 +47,6 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     }
 
     private class AlbumListFillTask extends AsyncTask<Void, Void, List<? extends Map<String, ?>>> {
-        public final static String NAME = "name";
-        public final static String ARTIST_NAME = "artist_name";
 
         @Override
         protected List<? extends Map<String, ?>> doInBackground(Void... ignored) {
