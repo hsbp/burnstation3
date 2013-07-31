@@ -41,6 +41,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.main);
         ListView lv = (ListView)findViewById(R.id.playlist);
         player = new Player(this);
