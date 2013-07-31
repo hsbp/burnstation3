@@ -1,6 +1,7 @@
 package org.hsbp.burnstation3;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.AsyncTask;
 import java.io.*;
 import java.net.URL;
@@ -88,5 +89,10 @@ public class Track implements Runnable {
         } finally {
             urlConnection.disconnect();
         }
+    }
+
+    public Uri getUri() {
+        run();
+        return Uri.fromFile(localFile);
     }
 }
