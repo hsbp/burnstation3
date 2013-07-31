@@ -17,7 +17,6 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
     public final static String ID = "id";
     public static final String UTF_8 = "UTF-8";
     protected Player player;
-    protected ArrayAdapter<Track> playList;
 
     /** Called when the activity is first created. */
     @Override
@@ -26,12 +25,10 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         ListView lv = (ListView)findViewById(R.id.playlist);
-        playList = new ArrayAdapter<Track>(
-                    this, android.R.layout.simple_list_item_1, new ArrayList<Track>());
-        lv.setAdapter(playList);
+        player = new Player(this);
+        lv.setAdapter(player);
         lv.setOnItemClickListener(this);
         new AlbumListFillTask().execute();
-        player = new Player();
     }
 
     private class AlbumListFillTask extends AsyncTask<Void, Void, List<? extends Map<String, ?>>> {
@@ -83,11 +80,11 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
             case R.id.tracks:
                 Track track = (Track)item;
                 track.prepare();
-                playList.add(track);
+                player.add(track);
                 playClicked(view);
                 break;
             case R.id.playlist:
-                player.play(this, (Track)item, true);
+                player.play((Track)item, true);
                 break;
         }
     }
@@ -139,8 +136,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
     }
 
     public void playClicked(View view) {
-        if (playList.getCount() == 0) return;
-        player.play(this, playList.getItem(0), false);
+        if (player.getCount() == 0) return;
+        player.play(player.getItem(0), false);
     }
 
     public void pauseClicked(View view) {
@@ -150,18 +147,18 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
     public void previousClicked(View view) {
         Track ct = player.getCurrentTrack();
         if (ct == null) return;
-        int pos = playList.getPosition(ct) - 1;
+        int pos = player.getPosition(ct) - 1;
         if (pos >= 0) {
-            player.play(this, playList.getItem(pos), true);
+            player.play(player.getItem(pos), true);
         }
     }
 
     public void nextClicked(View view) {
         Track ct = player.getCurrentTrack();
         if (ct == null) return;
-        int pos = playList.getPosition(ct) + 1;
-        if (pos < playList.getCount()) {
-            player.play(this, playList.getItem(pos), true);
+        int pos = player.getPosition(ct) + 1;
+        if (pos < player.getCount()) {
+            player.play(player.getItem(pos), true);
         }
     }
 }

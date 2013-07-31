@@ -4,13 +4,19 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.AudioManager;
 import android.os.PowerManager;
+import android.widget.ArrayAdapter;
+import java.util.ArrayList;
 
-public class Player {
+public class Player extends ArrayAdapter<Track> {
 
     protected MediaPlayer mp = null;
     protected Track currentTrack = null;
 
-    public synchronized void play(final Context ctx, final Track track, boolean forceReplace) {
+    public Player(Context ctx) {
+        super(ctx, android.R.layout.simple_list_item_1, new ArrayList<Track>());
+    }
+
+    public synchronized void play(final Track track, boolean forceReplace) {
         if (mp != null && track != currentTrack && forceReplace) {
             mp.release();
             mp = null;
@@ -20,6 +26,7 @@ public class Player {
             new Thread(new Runnable() {
                 public void run() {
                     synchronized (Player.this) {
+                        final Context ctx = getContext();
                         mp = MediaPlayer.create(ctx, track.getUri());
                         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         mp.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
