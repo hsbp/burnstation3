@@ -2,4 +2,6 @@
 <resources>
     <string name="app_name">BurnStation</string>
     <string name="release_date">Release date:</string>
+    <string name="download_full_album">Download full album</string>
+    <string name="enqueue_all_tracks">Enqueue all tracks</string>
 </resources>
