@@ -11,13 +11,15 @@ import java.io.*;
 import org.apache.commons.io.IOUtils;
 import org.json.*;
 
-public class Main extends Activity implements AdapterView.OnItemClickListener, PlayerUI
+public class Main extends Activity implements AdapterView.OnItemClickListener,
+       PlayerUI, SeekBar.OnSeekBarChangeListener
 {
     public final static String CLIENT_ID = "5559df65";
     public final static String ID = "id";
     public final static String TIME_FMT = "%d:%02d";
     public static final String UTF_8 = "UTF-8";
     protected Player player;
+    protected boolean seeker_update_enabled = true;
 
     /** Called when the activity is first created. */
     @Override
@@ -30,6 +32,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener, P
         lv.setAdapter(player);
         lv.setOnItemClickListener(this);
         new AlbumListFillTask().execute();
+        SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
+        sb.setOnSeekBarChangeListener(this);
     }
 
     private class AlbumListFillTask extends AsyncTask<Void, Void, List<? extends Map<String, ?>>> {
@@ -164,8 +168,10 @@ public class Main extends Activity implements AdapterView.OnItemClickListener, P
     }
 
     public void updateElapsed(int time) {
-        SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
-        sb.setProgress(time);
+        if (seeker_update_enabled) {
+            SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
+            sb.setProgress(time);
+        }
         updateTextViewTime(R.id.player_elapsed, time);
     }
 
@@ -178,5 +184,17 @@ public class Main extends Activity implements AdapterView.OnItemClickListener, P
     protected void updateTextViewTime(int res, int time) {
         TextView tv = (TextView)findViewById(res);
         tv.setText(String.format(TIME_FMT, time / 60, time % 60));
+    }
+
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if (fromUser) player.seek(progress);
+    }
+
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        seeker_update_enabled = false;
+    }
+
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        seeker_update_enabled = true;
     }
 }

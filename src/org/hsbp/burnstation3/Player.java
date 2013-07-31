@@ -66,4 +66,11 @@ public class Player extends ArrayAdapter<Track> implements Runnable {
             if (mp.isPlaying()) handler.postDelayed(this, 200);
         } catch (IllegalStateException ise) {}
     }
+
+    public synchronized void seek(int time) {
+        if (mp == null) return;
+        try {
+            mp.seekTo(time * 1000);
+        } catch (IllegalStateException ise) {}
+    }
 }
