@@ -8,4 +8,5 @@
     <string name="albums_order_popularity_total">Most popular albums so far</string>
     <string name="albums_order_popularity_month">Most popular albums this month</string>
     <string name="albums_order_popularity_week">Most popular albums this week</string>
+    <string name="loading_param">Loading %s</string>
 </resources>

@@ -2,6 +2,7 @@ package org.hsbp.burnstation3;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -38,6 +39,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     protected Player player;
     protected boolean seeker_update_enabled = true;
     protected String currentAlbumZip = null;
+    protected ProgressDialog progDlg = null;
 
     /** Called when the activity is first created. */
     @Override
@@ -61,8 +63,23 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
         albumsOrder.setSelection(0);
     }
 
+    public void showIndeterminateProgressDialog(String msg) {
+        hideIndeterminateProgressDialog();
+        progDlg = new ProgressDialog(this);
+        progDlg.setMessage(msg);
+        progDlg.setIndeterminate(true);
+        progDlg.show();
+    }
+
+    public void hideIndeterminateProgressDialog() {
+        if (progDlg == null) return;
+        progDlg.dismiss();
+        progDlg = null;
+    }
+
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         AlbumsOrder order = (AlbumsOrder)parent.getSelectedItem();
+        showIndeterminateProgressDialog(getString(R.string.loading_param, order));
         new AlbumListFillTask().execute(order);
     }
 
@@ -136,6 +153,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
             lv.setAdapter(new SimpleAdapter(Main.this, result,
                         R.layout.albums_item, map_from, map_to));
             lv.setOnItemClickListener(Main.this);
+            hideIndeterminateProgressDialog();
         }
     }
 
@@ -146,6 +164,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
                 Map<String, String> album = (Map<String, String>)item;
                 currentAlbumZip = album.get(ZIP);
                 new TrackListFillTask().execute(album.get(ID));
+                showIndeterminateProgressDialog(getString(
+                            R.string.loading_param, album.get(NAME)));
                 break;
             case R.id.tracks:
                 Track track = (Track)item;
@@ -195,6 +215,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
             lv.setAdapter(new ArrayAdapter(Main.this,
                         android.R.layout.simple_list_item_1, result));
             lv.setOnItemClickListener(Main.this);
+            hideIndeterminateProgressDialog();
         }
     }
 
