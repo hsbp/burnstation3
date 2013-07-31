@@ -94,6 +94,13 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
         }
     }
 
+    public void enqueueAllTracks(View view) {
+        AdapterView<?> av = (AdapterView<?>)findViewById(R.id.tracks);
+        for (int i = 0; i < av.getCount(); i++) {
+            onItemClick(av, null, i, 0);
+        }
+    }
+
     private class TrackListFillTask extends AsyncTask<String, Void, List<Track>> {
 
         @Override

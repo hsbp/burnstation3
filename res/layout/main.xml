@@ -10,12 +10,32 @@
         android:layout_height="fill_parent"
 		android:layout_weight="1"
         />
-    <ListView
-		android:id="@+id/tracks"
+    <LinearLayout
+        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
 		android:layout_weight="1"
-        />
+        >
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            >
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enqueue all tracks"
+                android:onClick="enqueueAllTracks"
+                />
+        </LinearLayout>
+        <ListView
+            android:id="@+id/tracks"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1"
+            />
+    </LinearLayout>
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
