@@ -138,4 +138,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener
         if (playList.getCount() == 0) return;
         player.play(this, playList.getItem(0));
     }
+
+    public void pauseClicked(View view) {
+        player.pause();
+    }
 }
