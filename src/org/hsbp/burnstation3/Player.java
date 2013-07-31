@@ -8,9 +8,15 @@ import android.os.PowerManager;
 public class Player {
 
     protected MediaPlayer mp = null;
+    protected Track currentTrack = null;
 
-    public synchronized void play(final Context ctx, final Track track) {
+    public synchronized void play(final Context ctx, final Track track, boolean forceReplace) {
+        if (mp != null && track != currentTrack && forceReplace) {
+            mp.release();
+            mp = null;
+        }
         if (mp == null) {
+            currentTrack = track;
             new Thread(new Runnable() {
                 public void run() {
                     synchronized (Player.this) {
