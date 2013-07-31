@@ -8,7 +8,8 @@ import android.os.PowerManager;
 import android.widget.ArrayAdapter;
 import java.util.ArrayList;
 
-public class Player extends ArrayAdapter<Track> implements Runnable {
+public class Player extends ArrayAdapter<Track> implements Runnable,
+        MediaPlayer.OnCompletionListener {
 
     protected MediaPlayer mp = null;
     protected Track currentTrack = null;
@@ -32,6 +33,7 @@ public class Player extends ArrayAdapter<Track> implements Runnable {
                     synchronized (Player.this) {
                         final Context ctx = getContext();
                         mp = MediaPlayer.create(ctx, track.getUri());
+                        mp.setOnCompletionListener(Player.this);
                         mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
                         mp.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
                         performPlay();
@@ -68,6 +70,10 @@ public class Player extends ArrayAdapter<Track> implements Runnable {
         try {
             mp.seekTo(time);
         } catch (IllegalStateException ise) {}
+    }
+
+    public void onCompletion(MediaPlayer mp) {
+        playNextTrack();
     }
 
     public synchronized void playPreviousTrack() {
