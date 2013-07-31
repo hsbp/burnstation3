@@ -16,10 +16,12 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 {
     public final static String CLIENT_ID = "5559df65";
     public final static String ID = "id";
+    public final static String ZIP = "zip";
     public final static String TIME_FMT = "%d:%02d";
     public static final String UTF_8 = "UTF-8";
     protected Player player;
     protected boolean seeker_update_enabled = true;
+    protected String currentAlbumZip = null;
 
     /** Called when the activity is first created. */
     @Override
@@ -51,6 +53,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
                         JSONObject item = api_result.getJSONObject(i);
                         album.put(ARTIST_NAME, item.getString(ARTIST_NAME));
                         album.put(NAME, item.getString(NAME));
+                        album.put(ZIP, item.getString(ZIP));
                         album.put(ID, item.getString(ID));
                         albums.add(album);
                     } catch (JSONException je) {
@@ -80,7 +83,9 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
         Object item = parent.getItemAtPosition(position);
         switch (parent.getId()) {
             case R.id.albums:
-                new TrackListFillTask().execute(((Map<String, String>)item).get(ID));
+                Map<String, String> album = (Map<String, String>)item;
+                currentAlbumZip = album.get(ZIP);
+                new TrackListFillTask().execute(album.get(ID));
                 break;
             case R.id.tracks:
                 Track track = (Track)item;
