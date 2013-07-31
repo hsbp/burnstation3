@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import java.io.*;
 import java.net.URL;
 import java.net.MalformedURLException;
-import java.net.HttpURLConnection;
 import java.util.Set;
 import java.util.HashSet;
 import org.json.JSONObject;
@@ -57,37 +56,13 @@ public class Track implements Runnable {
             beingCached.add(id);
         }
         try {
-            download();
+            Downloader.download(audio, localFile);
         } catch (IOException ioe) {
             ioe.printStackTrace(); // TODO notify user
         } finally {
             synchronized (beingCached) {
                 beingCached.remove(id);
             }
-        }
-    }
-
-    protected void download() throws IOException {
-        if (localFile.exists() && localFile.length() != 0) return;
-        HttpURLConnection urlConnection = (HttpURLConnection) audio.openConnection();
-        try {
-            InputStream input = new BufferedInputStream(urlConnection.getInputStream());
-            try {
-                OutputStream output = new FileOutputStream(localFile);
-                try {
-                    byte data[] = new byte[4096];
-                    int count;
-                    while ((count = input.read(data)) != -1) {
-                        output.write(data, 0, count);
-                    }
-                } finally {
-                    output.close();
-                }
-            } finally {
-                input.close();
-            }
-        } finally {
-            urlConnection.disconnect();
         }
     }
 
