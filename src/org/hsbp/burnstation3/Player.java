@@ -161,10 +161,12 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         @Override
         public String toString() {
 			int db = track.getDownloadedBytes();
-            return (playing ? "\u25B6 " : "") +
-                track.getArtistName() + ": " + track.getName() +
-                (db == Track.FULLY_DOWNLOADED ? "" :
-                 getContext().getString(R.string.downloaded, db / 1024));
+            StringBuilder sb = new StringBuilder();
+            if (playing) sb.append(track.isReadyToPlay() ? "\u25B6 " : "\u231B ");
+            sb.append(track.getArtistName()).append(": ").append(track.getName());
+            if (db != Track.FULLY_DOWNLOADED) sb.append(' ').append(
+                    getContext().getString(R.string.downloaded, db / 1024));
+            return sb.toString();
         }
     }
 }
