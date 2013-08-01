@@ -37,7 +37,13 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
                     synchronized (Player.this) {
                         final Context ctx = getContext();
                         int trialCount = 0;
-                        Uri track_uri = item.getTrack().getUri();
+                        final Track track = item.getTrack();
+                        final Uri track_uri = track.getUri();
+                        while (!track.isReadyToPlay()) {
+                            try {
+                                Thread.sleep(200);
+                            } catch (InterruptedException ie) {}
+                        }
                         while (true) {
                             try {
                                 mp = MediaPlayer.create(ctx, track_uri);

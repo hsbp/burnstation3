@@ -27,6 +27,7 @@ public class Track implements Runnable, Downloader.Notifiable {
     public final static String FILE_SUFFIX = ".mp3";
     protected int downloadedBytes = 0;
     public final static int FULLY_DOWNLOADED = -1;
+    protected final static int PLAY_TRESHOLD_BYTES = 300000;
     protected final Set<Notifiable> subscribers = new HashSet<Notifiable>();
 
     protected Track() {}
@@ -90,6 +91,10 @@ public class Track implements Runnable, Downloader.Notifiable {
 
     public int getDownloadedBytes() {
         return downloadedBytes;
+    }
+
+    public synchronized boolean isReadyToPlay() {
+        return downloadedBytes == FULLY_DOWNLOADED || downloadedBytes > PLAY_TRESHOLD_BYTES;
     }
 
     public Uri getUri() {
