@@ -126,7 +126,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
                         try {
                             File cover = new File(cacheDir,
                                     (String)album.get(ID) + ALBUM_COVER_FILE_SUFFIX);
-                            Downloader.download(new URL(item.getString(IMAGE)), cover);
+                            Downloader.download(new URL(item.getString(IMAGE)), cover, null);
                             album.put(IMAGE, cover.getAbsolutePath());
                         } catch (IOException ioe) {
                             album.put(IMAGE, R.drawable.burnstation);

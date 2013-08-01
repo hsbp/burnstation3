@@ -123,12 +123,22 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         add(new Item(track));
     }
 
-    protected class Item {
+    protected class Item implements Track.Notifiable, Runnable {
         protected final Track track;
         protected boolean playing = false;
+        protected final Handler handler = new Handler();
 
         public Item(Track track) {
             this.track = track;
+            track.subscribe(this);
+        }
+
+        public void trackInfoChanged() {
+            handler.post(this);
+        }
+
+        public void run() {
+            notifyDataSetChanged();
         }
 
         public Track getTrack() {
@@ -138,14 +148,17 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         public void setPlaying(boolean value) {
             if (value != playing) {
                 playing = value;
-                notifyDataSetChanged();
+                handler.post(this);
             }
         }
 
         @Override
         public String toString() {
+			int db = track.getDownloadedBytes();
             return (playing ? "\u25B6 " : "") +
-                track.getArtistName() + ": " + track.getName();
+                track.getArtistName() + ": " + track.getName() +
+                (db == Track.FULLY_DOWNLOADED ? "" :
+                 getContext().getString(R.string.downloaded, db / 1024));
         }
     }
 }

@@ -11,7 +11,7 @@ import java.util.HashSet;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-public class Track implements Runnable {
+public class Track implements Runnable, Downloader.Notifiable {
     protected String artistName, name, id;
     protected File localFile;
     protected URL audio;
@@ -25,6 +25,9 @@ public class Track implements Runnable {
     public final static String STR_FMT = "%s (%d:%02d)";
     public final static String CACHE_DIR = "org.hsbp.burnstation3.track.cache";
     public final static String FILE_SUFFIX = ".mp3";
+    protected int downloadedBytes = 0;
+    public final static int FULLY_DOWNLOADED = -1;
+    protected final Set<Notifiable> subscribers = new HashSet<Notifiable>();
 
     protected Track() {}
 
@@ -56,7 +59,7 @@ public class Track implements Runnable {
             beingCached.add(id);
         }
         try {
-            Downloader.download(audio, localFile);
+            Downloader.download(audio, localFile, this);
         } catch (IOException ioe) {
             ioe.printStackTrace(); // TODO notify user
         } finally {
@@ -64,6 +67,29 @@ public class Track implements Runnable {
                 beingCached.remove(id);
             }
         }
+    }
+
+    public synchronized void downloaded(int bytes) {
+        downloadedBytes = bytes;
+        for (Notifiable subscriber : subscribers) {
+            subscriber.trackInfoChanged();
+        }
+    }
+
+    public synchronized void completed(File target) {
+        downloaded(FULLY_DOWNLOADED);
+    }
+
+    public synchronized void subscribe(Notifiable subscriber) {
+        subscribers.add(subscriber);
+    }
+
+    public interface Notifiable {
+        public void trackInfoChanged();
+    }
+
+    public int getDownloadedBytes() {
+        return downloadedBytes;
     }
 
     public Uri getUri() {
