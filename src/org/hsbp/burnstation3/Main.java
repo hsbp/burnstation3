@@ -113,7 +113,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
         protected List<? extends Map<String, ?>> doInBackground(AlbumsOrder... order) {
             List<Map<String, Object>> albums = new ArrayList<Map<String, Object>>();
             try {
-                JSONArray api_result = getArrayFromApi("albums", "&order=" + order[0].getValue());
+                JSONArray api_result = getArrayFromApi("albums", "&imagesize=75&order=" + order[0].getValue());
                 File cacheDir = new File(getCacheDir(), ALBUM_COVER_CACHE_DIR);
                 cacheDir.mkdirs();
                 for (int i = 0; i < api_result.length(); i++) {
