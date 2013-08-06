@@ -11,7 +11,7 @@ import java.util.HashSet;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-public class Track implements Runnable, Downloader.Notifiable {
+public class Track implements Runnable, API.Notifiable {
     protected String artistName, name, id;
     protected File localFile;
     protected URL audio;
@@ -60,7 +60,7 @@ public class Track implements Runnable, Downloader.Notifiable {
             beingCached.add(id);
         }
         try {
-            Downloader.download(audio, localFile, this);
+            API.download(audio, localFile, this);
         } catch (IOException ioe) {
             ioe.printStackTrace(); // TODO notify user
         } finally {
