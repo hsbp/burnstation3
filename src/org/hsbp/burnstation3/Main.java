@@ -15,56 +15,56 @@ import java.io.*;
 import org.json.*;
 
 public class Main extends Activity implements AdapterView.OnItemClickListener,
-       PlayerUI, SeekBar.OnSeekBarChangeListener, AdapterView.OnItemSelectedListener
+	   PlayerUI, SeekBar.OnSeekBarChangeListener, AdapterView.OnItemSelectedListener
 {
-    public final static String TIME_FMT = "%d:%02d";
-    protected Player player;
-    protected boolean seeker_update_enabled = true;
-    protected String currentAlbumZip = null;
-    protected ProgressDialog progDlg = null;
+	public final static String TIME_FMT = "%d:%02d";
+	protected Player player;
+	protected boolean seeker_update_enabled = true;
+	protected String currentAlbumZip = null;
+	protected ProgressDialog progDlg = null;
 
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        Album.setContext(this);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.main);
-        ListView lv = (ListView)findViewById(R.id.playlist);
-        player = new Player(this);
-        lv.setAdapter(player);
-        lv.setOnItemClickListener(this);
-        SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
-        sb.setOnSeekBarChangeListener(this);
-        Spinner albumsOrder = (Spinner)findViewById(R.id.albums_order);
-        ArrayAdapter<Album.Order> albumsOrderAdapter = new ArrayAdapter<Album.Order>(
-                this, android.R.layout.simple_spinner_dropdown_item, Album.Order.values());
-        albumsOrder.setAdapter(albumsOrderAdapter);
-        albumsOrder.setOnItemSelectedListener(this);
-        albumsOrder.setSelection(0);
-        lv = (ListView)findViewById(R.id.albums);
-        lv.setOnItemClickListener(this);
-    }
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		Album.setContext(this);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.main);
+		ListView lv = (ListView)findViewById(R.id.playlist);
+		player = new Player(this);
+		lv.setAdapter(player);
+		lv.setOnItemClickListener(this);
+		SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
+		sb.setOnSeekBarChangeListener(this);
+		Spinner albumsOrder = (Spinner)findViewById(R.id.albums_order);
+		ArrayAdapter<Album.Order> albumsOrderAdapter = new ArrayAdapter<Album.Order>(
+				this, android.R.layout.simple_spinner_dropdown_item, Album.Order.values());
+		albumsOrder.setAdapter(albumsOrderAdapter);
+		albumsOrder.setOnItemSelectedListener(this);
+		albumsOrder.setSelection(0);
+		lv = (ListView)findViewById(R.id.albums);
+		lv.setOnItemClickListener(this);
+	}
 
-    public void showIndeterminateProgressDialog(String msg) {
-        hideIndeterminateProgressDialog();
-        progDlg = new ProgressDialog(this);
-        progDlg.setMessage(msg);
-        progDlg.setIndeterminate(true);
-        progDlg.show();
-    }
+	public void showIndeterminateProgressDialog(String msg) {
+		hideIndeterminateProgressDialog();
+		progDlg = new ProgressDialog(this);
+		progDlg.setMessage(msg);
+		progDlg.setIndeterminate(true);
+		progDlg.show();
+	}
 
-    public void hideIndeterminateProgressDialog() {
-        if (progDlg == null) return;
-        progDlg.dismiss();
-        progDlg = null;
-    }
+	public void hideIndeterminateProgressDialog() {
+		if (progDlg == null) return;
+		progDlg.dismiss();
+		progDlg = null;
+	}
 
-    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        Album.Order order = (Album.Order)parent.getSelectedItem();
-        showIndeterminateProgressDialog(getString(R.string.loading_param, order));
-        new Album.FillTask((ListView)findViewById(R.id.albums), this, this).execute(order);
+	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+		Album.Order order = (Album.Order)parent.getSelectedItem();
+		showIndeterminateProgressDialog(getString(R.string.loading_param, order));
+		new AlbumFillTask((ListView)findViewById(R.id.albums), this, this).execute(order);
     }
 
     public void onNothingSelected(AdapterView<?> parent) {}

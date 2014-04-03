@@ -10,10 +10,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.view.Display;
 import android.widget.*;
-import java.io.*;
-import java.net.*;
 import java.util.*;
-import org.json.*;
 
 public class Album extends HashMap<String, Object> {
 
@@ -23,74 +20,13 @@ public class Album extends HashMap<String, Object> {
     public final static String ARTIST_NAME = "artist_name";
     public final static String RELEASE_DATE = "releasedate";
     public final static String IMAGE = "image";
-    public final static String[] ALBUM_FIELDS = {ARTIST_NAME, NAME, ZIP, ID, RELEASE_DATE};
-    public final static String ALBUM_COVER_CACHE_DIR = "org.hsbp.burnstation3.album_cover.cache";
-    public final static String ALBUM_COVER_FILE_SUFFIX = ".jpg";
+    public final static String[] FIELDS = {ARTIST_NAME, NAME, ZIP, ID, RELEASE_DATE};
 
     protected static Context staticContext;
 
 	public static void setContext(Context ctx) {
 		staticContext = ctx;
 	}
-
-    public static class FillTask extends AsyncTask<Order, Void, List<? extends Map<String, ?>>> {
-
-        protected final ListView target;
-		protected final Context ctx;
-		protected final PlayerUI ui;
-
-        public FillTask(ListView target, Context ctx, PlayerUI ui) {
-            super();
-            this.target = target;
-			this.ctx = ctx;
-			this.ui = ui;
-        }
-
-        @Override
-        protected List<? extends Map<String, ?>> doInBackground(Order... order) {
-            List<Map<String, Object>> albums = new ArrayList<Map<String, Object>>();
-            try {
-                JSONArray api_result = API.getArray("albums", "&imagesize=75&order=" + order[0].getValue());
-                File cacheDir = new File(ctx.getCacheDir(), ALBUM_COVER_CACHE_DIR);
-                cacheDir.mkdirs();
-                for (int i = 0; i < api_result.length(); i++) {
-                    try {
-                        Map<String, Object> album = new Album();
-                        JSONObject item = api_result.getJSONObject(i);
-                        for (String field : ALBUM_FIELDS) {
-                            album.put(field, item.getString(field));
-                        }
-                        try {
-                            File cover = new File(cacheDir,
-                                    (String)album.get(ID) + ALBUM_COVER_FILE_SUFFIX);
-                            API.download(new URL(item.getString(IMAGE)), cover, null);
-                            album.put(IMAGE, cover.getAbsolutePath());
-                        } catch (IOException ioe) {
-                            album.put(IMAGE, R.drawable.burnstation);
-                        }
-                        albums.add(album);
-                    } catch (JSONException je) {
-                        je.printStackTrace(); // TODO report API error
-                    }
-                }
-            } catch (JSONException je) {
-                je.printStackTrace(); // TODO report API error
-            } catch (IOException ioe) {
-                ioe.printStackTrace(); // TODO report API error
-            }
-            return albums;
-        }
-
-        @Override
-        protected void onPostExecute(List<? extends Map<String, ?>> result) {
-            final String[] map_from = {NAME, ARTIST_NAME, IMAGE, RELEASE_DATE};
-            final int[] map_to = {R.id.album_name, R.id.album_artist,
-                R.id.album_image, R.id.album_release_date};
-            target.setAdapter(new SimpleAdapter(ctx, result,
-                        R.layout.albums_item, map_from, map_to));
-            ui.hideIndeterminateProgressDialog();
-        }
-    }
 
     public enum Order {
         POPULARITY_WEEK(R.string.albums_order_popularity_week),
