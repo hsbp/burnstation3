@@ -35,21 +35,12 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
 
                 public void run() {
                     synchronized (Player.this) {
-                        final Context ctx = getContext();
                         int trialCount = 0;
                         final Track track = item.getTrack();
-                        final Uri track_uri = track.getUri();
-                        while (!track.isReadyToPlay()) {
-                            try {
-                                Thread.sleep(200);
-                            } catch (InterruptedException ie) {}
-                        }
+						waitForReadyTrack(track);
                         while (true) {
                             try {
-                                mp = MediaPlayer.create(ctx, track_uri);
-								mp.setOnCompletionListener(Player.this);
-								mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
-								mp.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+								setupMediaPlayer(track);
 								performPlay();
 								return;
                             } catch (Exception e) {
@@ -68,6 +59,22 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
                                 }
                             }
                         }
+                    }
+                }
+
+                protected void setupMediaPlayer(Track track) {
+                    final Context ctx = getContext();
+                    mp = MediaPlayer.create(ctx, track.getUri());
+                    mp.setOnCompletionListener(Player.this);
+                    mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+                    mp.setWakeMode(ctx.getApplicationContext(), PowerManager.PARTIAL_WAKE_LOCK);
+                }
+
+                protected void waitForReadyTrack(Track track) {
+                    while (!track.isReadyToPlay()) {
+                        try {
+                            Thread.sleep(200);
+                        } catch (InterruptedException ie) {}
                     }
                 }
             }).start();
