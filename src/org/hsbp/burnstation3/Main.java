@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.widget.*;
 import android.view.View;
 import android.view.Window;
-import java.util.Map;
+import java.util.*;
 
 public class Main extends Activity implements AdapterView.OnItemClickListener {
 
@@ -61,7 +61,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
                 loadAlbumTracks((Map<String, String>)item);
                 break;
             case R.id.tracks:
-                enqueueTrack((Track)item);
+                player.add(Collections.singletonList((Track)item));
                 break;
             case R.id.playlist:
                 player.play((Player.Item)item, true);
@@ -75,16 +75,12 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
                 R.string.loading_param, album.get(Album.NAME), album.get(Album.ID));
     }
 
-    protected void enqueueTrack(Track track) {
-        player.add(track);
-        playClicked(null);
-    }
-
     public void enqueueAllTracks(View view) {
-        AdapterView<?> av = (AdapterView<?>)findViewById(R.id.tracks);
-        for (int i = 0; i < av.getCount(); i++) {
-            onItemClick(av, null, i, 0);
-        }
+        final AdapterView<?> av = (AdapterView<?>)findViewById(R.id.tracks);
+        final int count = av.getCount();
+        final List<Track> tracks = new ArrayList(count);
+        for (int i = 0; i < count; i++) tracks.add((Track)av.getItemAtPosition(i));
+        player.add(tracks);
     }
 
     public void playClicked(View view) {

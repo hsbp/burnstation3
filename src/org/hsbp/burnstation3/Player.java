@@ -134,9 +134,17 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         }
     }
 
-    public void add(Track track) {
-        track.prepare(ui);
-        add(new Item(track));
+    public synchronized void add(final Iterable<Track> tracks) {
+        boolean first = true;
+        for (final Track track : tracks) {
+            track.prepare(ui);
+            final Item i = new Item(track);
+            add(i);
+            if (first) {
+                if (mp == null || !mp.isPlaying()) play(i, true);
+                first = false;
+            }
+        }
     }
 
     protected class Item implements Track.Notifiable, Runnable {
