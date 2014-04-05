@@ -15,6 +15,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 	protected Player player;
 	protected String currentAlbumZip;
 	protected PlayerUI playerUi;
+	protected TrackListFillTask trackListFiller;
+	protected AlbumFillTask albumListFiller;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -33,6 +35,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 		playerUi = new PlayerUiImpl(this);
 		player = new Player(this, playerUi);
 		lv.setAdapter(player);
+        trackListFiller = new TrackListFillTask((ListView)findViewById(R.id.tracks), this, playerUi);
+		albumListFiller = new AlbumFillTask((ListView)findViewById(R.id.albums), this, playerUi);
 	}
 
 	public void initAlbumsOrder() {
@@ -55,7 +59,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		Album.Order order = (Album.Order)parent.getSelectedItem();
 		playerUi.showIndeterminateProgressDialog(getString(R.string.loading_param, order));
-		new AlbumFillTask((ListView)findViewById(R.id.albums), this, playerUi).execute(order);
+		albumListFiller.execute(order);
     }
 
     public void onNothingSelected(AdapterView<?> parent) {}
@@ -79,8 +83,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
         currentAlbumZip = album.get(Album.ZIP);
         playerUi.showIndeterminateProgressDialog(getString(
                     R.string.loading_param, album.get(Album.NAME)));
-        new TrackListFillTask((ListView)findViewById(R.id.tracks),
-					this, playerUi).execute(album.get(Album.ID));
+        trackListFiller.execute(album.get(Album.ID));
     }
 
     protected void enqueueTrack(Track track) {
