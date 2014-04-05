@@ -58,8 +58,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		Album.Order order = (Album.Order)parent.getSelectedItem();
-		playerUi.showIndeterminateProgressDialog(getString(R.string.loading_param, order));
-		albumListFiller.execute(order);
+		albumListFiller.executeWithMessage(order, R.string.loading_param, order.toString());
     }
 
     public void onNothingSelected(AdapterView<?> parent) {}
@@ -81,9 +80,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
     protected void loadAlbumTracks(Map<String, String> album) {
         currentAlbumZip = album.get(Album.ZIP);
-        playerUi.showIndeterminateProgressDialog(getString(
-                    R.string.loading_param, album.get(Album.NAME)));
-        trackListFiller.execute(album.get(Album.ID));
+        trackListFiller.executeWithMessage(album.get(Album.ID),
+				R.string.loading_param, album.get(Album.NAME));
     }
 
     protected void enqueueTrack(Track track) {
