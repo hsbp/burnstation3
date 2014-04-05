@@ -89,6 +89,12 @@
                 android:onClick="nextClicked"
                 android:layout_marginRight="25px"
                 />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/empty_playlist"
+                android:onClick="emptyClicked"
+                />
         </LinearLayout>
         <SeekBar
             android:layout_width="fill_parent"

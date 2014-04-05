@@ -100,6 +100,10 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
         player.playNextTrack();
     }
 
+    public void emptyClicked(View view) {
+        player.clear();
+    }
+
     public void showAlbumZipAccess(View view) {
         new Album.ZipAccessTask(this, currentAlbumZip).execute();
     }

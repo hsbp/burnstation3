@@ -147,6 +147,15 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         }
     }
 
+    public synchronized void clear() {
+        if (mp != null) {
+            mp.release();
+            mp = null;
+        }
+        ui.updateElapsed(0);
+        super.clear();
+    }
+
     protected class Item implements Track.Notifiable, Runnable {
         protected final Track track;
         protected boolean playing = false;
