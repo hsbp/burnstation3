@@ -8,6 +8,7 @@ import java.net.URL;
 import java.net.MalformedURLException;
 import java.util.Set;
 import java.util.HashSet;
+import java.util.Collections;
 import org.json.JSONObject;
 import org.json.JSONException;
 
@@ -16,7 +17,8 @@ public class Track implements Runnable, API.Notifiable {
     protected File localFile;
     protected URL audio;
     protected int duration;
-    protected final static Set<String> beingCached = new HashSet<String>();
+    protected final static Set<String> beingCached =
+        Collections.synchronizedSet(new HashSet<String>());
     public final static String ID = "id";
     public final static String NAME = "name";
     public final static String ARTIST_NAME = "artist_name";
@@ -57,17 +59,13 @@ public class Track implements Runnable, API.Notifiable {
     }
 
     public void run() {
-        synchronized (beingCached) {
-            if (!beingCached.add(id)) return;
-        }
+        if (!beingCached.add(id)) return;
         try {
             API.download(audio, localFile, this);
         } catch (IOException ioe) {
             ui.handleException(R.string.media_fetch_error, ioe);
         } finally {
-            synchronized (beingCached) {
-                beingCached.remove(id);
-            }
+            beingCached.remove(id);
         }
     }
 
