@@ -13,9 +13,11 @@ public class AlbumFillTask extends ListFillTask<Album.Order, Map<String, ?>>
 
 	public final static String ALBUM_COVER_CACHE_DIR = "org.hsbp.burnstation3.album_cover.cache";
 	public final static String ALBUM_COVER_FILE_SUFFIX = ".jpg";
+	private final Activity activity;
 
 	public AlbumFillTask(final Activity activity, final PlayerUI ui) {
 		super(R.id.albums, activity, ui);
+		this.activity = activity;
 	}
 
 	@Override
@@ -56,6 +58,7 @@ public class AlbumFillTask extends ListFillTask<Album.Order, Map<String, ?>>
 	public void onItemSelected(final AdapterView<?> parent, final View view,
 			final int position, final long id) {
 		final Album.Order order = (Album.Order)parent.getSelectedItem();
+		parent.setOnItemSelectedListener(new AlbumFillTask(activity, ui));
 		executeWithMessage(R.string.loading_param, order.toString(), order);
 	}
 

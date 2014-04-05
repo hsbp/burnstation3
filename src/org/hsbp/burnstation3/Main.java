@@ -15,6 +15,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
 	protected Player player;
 	protected String currentAlbumZip;
 	protected TrackListFillTask trackListFiller;
+	protected PlayerUI playerUi;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -23,20 +24,20 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
-		final PlayerUI playerUi = new PlayerUiImpl(this);
-		initPlayer(playerUi);
-		initAlbumsOrder(playerUi);
+		playerUi = new PlayerUiImpl(this);
+		initPlayer();
+		initAlbumsOrder();
 		initListViewClickListeners();
 	}
 
-	public void initPlayer(final PlayerUI playerUi) {
+	public void initPlayer() {
 		final ListView lv = (ListView)findViewById(R.id.playlist);
 		player = new Player(this, playerUi);
 		lv.setAdapter(player);
         trackListFiller = new TrackListFillTask(this, playerUi);
 	}
 
-	public void initAlbumsOrder(final PlayerUI playerUi) {
+	public void initAlbumsOrder() {
 		final Spinner albumsOrder = (Spinner)findViewById(R.id.albums_order);
 		final ArrayAdapter<Album.Order> albumsOrderAdapter = new ArrayAdapter<Album.Order>(
 				this, android.R.layout.simple_spinner_dropdown_item, Album.Order.values());
@@ -70,8 +71,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
 
     protected void loadAlbumTracks(Map<String, String> album) {
         currentAlbumZip = album.get(Album.ZIP);
-        trackListFiller.executeWithMessage(R.string.loading_param,
-				album.get(Album.NAME), album.get(Album.ID));
+        new TrackListFillTask(this, playerUi).executeWithMessage(
+                R.string.loading_param, album.get(Album.NAME), album.get(Album.ID));
     }
 
     protected void enqueueTrack(Track track) {
