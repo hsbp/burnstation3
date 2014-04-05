@@ -30,20 +30,34 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
-		ListView lv = (ListView)findViewById(R.id.playlist);
+		initPlayer();
+		initAlbumsOrder();
+		initListViewClickListeners();
+	}
+
+	public void initPlayer() {
+		final ListView lv = (ListView)findViewById(R.id.playlist);
 		player = new Player(this);
 		lv.setAdapter(player);
-		lv.setOnItemClickListener(this);
-		SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
+		final SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
 		sb.setOnSeekBarChangeListener(this);
-		Spinner albumsOrder = (Spinner)findViewById(R.id.albums_order);
-		ArrayAdapter<Album.Order> albumsOrderAdapter = new ArrayAdapter<Album.Order>(
+	}
+
+	public void initAlbumsOrder() {
+		final Spinner albumsOrder = (Spinner)findViewById(R.id.albums_order);
+		final ArrayAdapter<Album.Order> albumsOrderAdapter = new ArrayAdapter<Album.Order>(
 				this, android.R.layout.simple_spinner_dropdown_item, Album.Order.values());
 		albumsOrder.setAdapter(albumsOrderAdapter);
 		albumsOrder.setOnItemSelectedListener(this);
 		albumsOrder.setSelection(0);
-		lv = (ListView)findViewById(R.id.albums);
-		lv.setOnItemClickListener(this);
+	}
+
+	public void initListViewClickListeners() {
+		final int[] listViewIds = {R.id.albums, R.id.tracks, R.id.playlist};
+		for (final int id : listViewIds) {
+			final ListView view = (ListView)findViewById(id);
+			view.setOnItemClickListener(this);
+		}
 	}
 
 	public void showIndeterminateProgressDialog(String msg) {
@@ -125,7 +139,6 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
                 ListView lv = (ListView)findViewById(R.id.tracks);
                 lv.setAdapter(new ArrayAdapter(Main.this,
                             android.R.layout.simple_list_item_1, result));
-                lv.setOnItemClickListener(Main.this);
             }
             hideIndeterminateProgressDialog();
         }
