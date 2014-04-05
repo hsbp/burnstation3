@@ -17,9 +17,10 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
     protected final PlayerUI ui;
     protected final Handler handler = new Handler();
 
-    public Player(Context ctx) {
+    public Player(Context ctx, PlayerUI ui) {
         super(ctx, android.R.layout.simple_list_item_1, new ArrayList<Player.Item>());
-        ui = (PlayerUI)ctx;
+        ui.setPlayer(this);
+        this.ui = ui;
     }
 
     public synchronized void play(final Item item, boolean forceReplace) {

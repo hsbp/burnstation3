@@ -2,7 +2,6 @@ package org.hsbp.burnstation3;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.AsyncTask;
@@ -15,13 +14,10 @@ import java.io.*;
 import org.json.*;
 
 public class Main extends Activity implements AdapterView.OnItemClickListener,
-	   PlayerUI, SeekBar.OnSeekBarChangeListener, AdapterView.OnItemSelectedListener
-{
-	public final static String TIME_FMT = "%d:%02d";
+	   AdapterView.OnItemSelectedListener {
 	protected Player player;
-	protected boolean seekerUpdateEnabled = true;
 	protected String currentAlbumZip;
-	protected ProgressDialog progDlg;
+	protected PlayerUI playerUi;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -37,10 +33,9 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
 	public void initPlayer() {
 		final ListView lv = (ListView)findViewById(R.id.playlist);
-		player = new Player(this);
+		playerUi = new PlayerUiImpl(this);
+		player = new Player(this, playerUi);
 		lv.setAdapter(player);
-		final SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
-		sb.setOnSeekBarChangeListener(this);
 	}
 
 	public void initAlbumsOrder() {
@@ -60,24 +55,10 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 		}
 	}
 
-	public void showIndeterminateProgressDialog(String msg) {
-		hideIndeterminateProgressDialog();
-		progDlg = new ProgressDialog(this);
-		progDlg.setMessage(msg);
-		progDlg.setIndeterminate(true);
-		progDlg.show();
-	}
-
-	public void hideIndeterminateProgressDialog() {
-		if (progDlg == null) return;
-		progDlg.dismiss();
-		progDlg = null;
-	}
-
 	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 		Album.Order order = (Album.Order)parent.getSelectedItem();
-		showIndeterminateProgressDialog(getString(R.string.loading_param, order));
-		new AlbumFillTask((ListView)findViewById(R.id.albums), this, this).execute(order);
+		playerUi.showIndeterminateProgressDialog(getString(R.string.loading_param, order));
+		new AlbumFillTask((ListView)findViewById(R.id.albums), this, playerUi).execute(order);
     }
 
     public void onNothingSelected(AdapterView<?> parent) {}
@@ -99,13 +80,13 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
     protected void loadAlbumTracks(Map<String, String> album) {
         currentAlbumZip = album.get(Album.ZIP);
-        showIndeterminateProgressDialog(getString(
+        playerUi.showIndeterminateProgressDialog(getString(
                     R.string.loading_param, album.get(Album.NAME)));
         new TrackListFillTask().execute(album.get(Album.ID));
     }
 
     protected void enqueueTrack(Track track) {
-        track.prepare(this);
+        track.prepare(playerUi);
         player.add(track);
         playClicked(null);
     }
@@ -121,7 +102,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
         @Override
         protected List<Track> doInBackground(String... albumId) {
-            final JsonArrayProcessor<Track> jap = new JsonArrayProcessor<Track>(Main.this) {
+            final JsonArrayProcessor<Track> jap = new JsonArrayProcessor<Track>(playerUi) {
                 public Track mapItem(final JSONObject item) throws JSONException, IOException {
                     return Track.fromJSONObject(Main.this, item);
                 }
@@ -140,18 +121,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
                 lv.setAdapter(new ArrayAdapter(Main.this,
                             android.R.layout.simple_list_item_1, result));
             }
-            hideIndeterminateProgressDialog();
+            playerUi.hideIndeterminateProgressDialog();
         }
-    }
-
-    public void handleException(final int message, final Exception e) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
-            }
-        });
-        e.printStackTrace();
     }
 
     public void playClicked(View view) {
@@ -169,37 +140,6 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
     public void nextClicked(View view) {
         player.playNextTrack();
-    }
-
-    public void updateElapsed(int time) {
-        if (seekerUpdateEnabled) {
-            SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
-            sb.setProgress(time);
-        }
-        updateTextViewTime(R.id.player_elapsed, time / 1000);
-    }
-
-    public void updateTotal(int time) {
-        SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
-        sb.setMax(time * 1000);
-        updateTextViewTime(R.id.player_total, time);
-    }
-
-    protected void updateTextViewTime(int res, int time) {
-        TextView tv = (TextView)findViewById(res);
-        tv.setText(String.format(TIME_FMT, time / 60, time % 60));
-    }
-
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if (fromUser) player.seek(progress);
-    }
-
-    public void onStartTrackingTouch(SeekBar seekBar) {
-        seekerUpdateEnabled = false;
-    }
-
-    public void onStopTrackingTouch(SeekBar seekBar) {
-        seekerUpdateEnabled = true;
     }
 
     public void showAlbumZipAccess(View view) {
