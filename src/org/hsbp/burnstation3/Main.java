@@ -10,12 +10,11 @@ import android.view.View;
 import android.view.Window;
 import java.util.Map;
 
-public class Main extends Activity implements AdapterView.OnItemClickListener,
-	   AdapterView.OnItemSelectedListener {
+public class Main extends Activity implements AdapterView.OnItemClickListener {
+
 	protected Player player;
 	protected String currentAlbumZip;
 	protected TrackListFillTask trackListFiller;
-	protected AlbumFillTask albumListFiller;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -24,26 +23,25 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.main);
-		initPlayer();
-		initAlbumsOrder();
+		final PlayerUI playerUi = new PlayerUiImpl(this);
+		initPlayer(playerUi);
+		initAlbumsOrder(playerUi);
 		initListViewClickListeners();
 	}
 
-	public void initPlayer() {
+	public void initPlayer(final PlayerUI playerUi) {
 		final ListView lv = (ListView)findViewById(R.id.playlist);
-		final PlayerUI playerUi = new PlayerUiImpl(this);
 		player = new Player(this, playerUi);
 		lv.setAdapter(player);
         trackListFiller = new TrackListFillTask(this, playerUi);
-		albumListFiller = new AlbumFillTask(this, playerUi);
 	}
 
-	public void initAlbumsOrder() {
+	public void initAlbumsOrder(final PlayerUI playerUi) {
 		final Spinner albumsOrder = (Spinner)findViewById(R.id.albums_order);
 		final ArrayAdapter<Album.Order> albumsOrderAdapter = new ArrayAdapter<Album.Order>(
 				this, android.R.layout.simple_spinner_dropdown_item, Album.Order.values());
 		albumsOrder.setAdapter(albumsOrderAdapter);
-		albumsOrder.setOnItemSelectedListener(this);
+		albumsOrder.setOnItemSelectedListener(new AlbumFillTask(this, playerUi));
 		albumsOrder.setSelection(0);
 	}
 
@@ -54,13 +52,6 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 			view.setOnItemClickListener(this);
 		}
 	}
-
-	public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-		Album.Order order = (Album.Order)parent.getSelectedItem();
-		albumListFiller.executeWithMessage(order, R.string.loading_param, order.toString());
-    }
-
-    public void onNothingSelected(AdapterView<?> parent) {}
 
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         Object item = parent.getItemAtPosition(position);

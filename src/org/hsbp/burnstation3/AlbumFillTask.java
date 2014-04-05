@@ -1,13 +1,15 @@
 package org.hsbp.burnstation3;
 
 import android.app.Activity;
+import android.view.View;
 import android.widget.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
 import org.json.*;
 
-public class AlbumFillTask extends ListFillTask<Album.Order, Map<String, ?>> {
+public class AlbumFillTask extends ListFillTask<Album.Order, Map<String, ?>>
+	implements AdapterView.OnItemSelectedListener {
 
 	public final static String ALBUM_COVER_CACHE_DIR = "org.hsbp.burnstation3.album_cover.cache";
 	public final static String ALBUM_COVER_FILE_SUFFIX = ".jpg";
@@ -50,4 +52,12 @@ public class AlbumFillTask extends ListFillTask<Album.Order, Map<String, ?>> {
 			R.id.album_image, R.id.album_release_date};
 		return new SimpleAdapter(ctx, result, R.layout.albums_item, mapFrom, mapTo);
 	}
+
+	public void onItemSelected(final AdapterView<?> parent, final View view,
+			final int position, final long id) {
+		final Album.Order order = (Album.Order)parent.getSelectedItem();
+		executeWithMessage(order, R.string.loading_param, order.toString());
+	}
+
+	public void onNothingSelected(AdapterView<?> parent) {}
 }
