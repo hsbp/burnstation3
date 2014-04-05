@@ -6,7 +6,8 @@
     <uses-sdk android:minSdkVersion="11" android:targetSdkVersion="17" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <application android:label="@string/app_name" android:icon="@drawable/burnstation">
+    <application android:label="@string/app_name" android:icon="@drawable/burnstation"
+        android:name="org.hsbp.burnstation3.BurnStationApplication">
         <activity android:name="Main"
                   android:label="@string/app_name">
             <intent-filter>

@@ -22,12 +22,6 @@ public class Album extends HashMap<String, Object> {
     public final static String IMAGE = "image";
     public final static String[] FIELDS = {ARTIST_NAME, NAME, ZIP, ID, RELEASE_DATE};
 
-    protected static Context staticContext;
-
-	public static void setContext(Context ctx) {
-		staticContext = ctx;
-	}
-
     public enum Order {
         POPULARITY_WEEK(R.string.albums_order_popularity_week),
         POPULARITY_MONTH(R.string.albums_order_popularity_month),
@@ -46,7 +40,7 @@ public class Album extends HashMap<String, Object> {
 
         @Override
         public String toString() {
-            return staticContext.getString(res);
+            return BurnStationApplication.getAppContext().getString(res);
         }
     }
 
