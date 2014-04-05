@@ -28,7 +28,7 @@ public class Album extends HashMap<String, Object> {
         POPULARITY_TOTAL(R.string.albums_order_popularity_total),
         RELEASEDATE_DESC(R.string.albums_order_releasedate_desc);
 
-        private int res;
+        private final int res;
 
         private Order(int res) {
             this.res = res;
