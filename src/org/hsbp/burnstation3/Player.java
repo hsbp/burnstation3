@@ -76,11 +76,11 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
                     }
                 }
             }).start();
-            item.setPlaying(true);
-            ui.updateTotal(item.getTrack().duration);
         } else {
             performPlay();
         }
+        item.setPlaying(true);
+        ui.updateTotal(item.getTrack().duration);
     }
 
     public synchronized void pause() {
