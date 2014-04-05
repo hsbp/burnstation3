@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.*;
 import java.io.*;
-import java.net.*;
+import java.net.URL;
 import java.util.*;
 import org.json.*;
 
