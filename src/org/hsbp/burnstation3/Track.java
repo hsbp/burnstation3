@@ -58,8 +58,7 @@ public class Track implements Runnable, API.Notifiable {
 
     public void run() {
         synchronized (beingCached) {
-            if (beingCached.contains(id)) return;
-            beingCached.add(id);
+            if (!beingCached.add(id)) return;
         }
         try {
             API.download(audio, localFile, this);
