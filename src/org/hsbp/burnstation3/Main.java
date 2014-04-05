@@ -115,10 +115,12 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
         @Override
         protected void onPostExecute(List<Track> result) {
-            ListView lv = (ListView)findViewById(R.id.tracks);
-            lv.setAdapter(new ArrayAdapter(Main.this,
-                        android.R.layout.simple_list_item_1, result));
-            lv.setOnItemClickListener(Main.this);
+            if (!result.isEmpty()) {
+                ListView lv = (ListView)findViewById(R.id.tracks);
+                lv.setAdapter(new ArrayAdapter(Main.this,
+                            android.R.layout.simple_list_item_1, result));
+                lv.setOnItemClickListener(Main.this);
+            }
             hideIndeterminateProgressDialog();
         }
     }
