@@ -48,13 +48,13 @@ public class AlbumFillTask extends AsyncTask<Album.Order, Void, List<? extends M
 					}
 					albums.add(album);
 				} catch (JSONException je) {
-					je.printStackTrace(); // TODO report API error
+					ui.handleException(R.string.api_album_construction_error, je);
 				}
 			}
 		} catch (JSONException je) {
-			je.printStackTrace(); // TODO report API error
+			ui.handleException(R.string.api_album_extraction_error, je);
 		} catch (IOException ioe) {
-			ioe.printStackTrace(); // TODO report API error
+			ui.handleException(R.string.api_album_io_error, ioe);
 		}
 		return albums;
 	}

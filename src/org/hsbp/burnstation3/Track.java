@@ -29,6 +29,7 @@ public class Track implements Runnable, API.Notifiable {
     public final static int FULLY_DOWNLOADED = -1;
     protected final static int PLAY_TRESHOLD_BYTES = 300000;
     protected final Set<Notifiable> subscribers = new HashSet<Notifiable>();
+    protected PlayerUI ui;
 
     protected Track() {}
 
@@ -50,7 +51,8 @@ public class Track implements Runnable, API.Notifiable {
         return String.format(STR_FMT, name, duration / 60, duration % 60);
     }
 
-    public void prepare() {
+    public void prepare(final PlayerUI ui) {
+        this.ui = ui;
         new Thread(this).start();
     }
 
@@ -62,7 +64,7 @@ public class Track implements Runnable, API.Notifiable {
         try {
             API.download(audio, localFile, this);
         } catch (IOException ioe) {
-            ioe.printStackTrace(); // TODO notify user
+            ui.handleException(R.string.media_fetch_error, ioe);
         } finally {
             synchronized (beingCached) {
                 beingCached.remove(id);

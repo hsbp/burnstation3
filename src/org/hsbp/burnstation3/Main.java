@@ -81,7 +81,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
                 break;
             case R.id.tracks:
                 Track track = (Track)item;
-                track.prepare();
+                track.prepare(this);
                 player.add(track);
                 playClicked(view);
                 break;
@@ -110,13 +110,13 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
                         JSONObject item = api_result.getJSONObject(i);
                         tracks.add(Track.fromJSONObject(Main.this, item));
                     } catch (JSONException je) {
-                        je.printStackTrace(); // TODO report API error
+                        handleException(R.string.api_track_construction_error, je);
                     }
                 }
             } catch (JSONException je) {
-                je.printStackTrace(); // TODO report API error
+                handleException(R.string.api_track_extraction_error, je);
             } catch (IOException ioe) {
-                ioe.printStackTrace(); // TODO report API error
+                handleException(R.string.api_track_io_error, ioe);
             }
             return tracks;
         }
@@ -129,6 +129,16 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
             lv.setOnItemClickListener(Main.this);
             hideIndeterminateProgressDialog();
         }
+    }
+
+    public void handleException(final int message, final Exception e) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(Main.this, message, Toast.LENGTH_LONG).show();
+            }
+        });
+        e.printStackTrace();
     }
 
     public void playClicked(View view) {

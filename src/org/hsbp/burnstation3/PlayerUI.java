@@ -4,4 +4,5 @@ public interface PlayerUI {
     public void updateElapsed(int time);
     public void updateTotal(int time);
     public void hideIndeterminateProgressDialog();
+    public void handleException(int message, Exception e);
 }

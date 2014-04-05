@@ -55,7 +55,8 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
                                 if (trialCount >= TRIAL_COUNT_TRESHOLD) {
                                     item.setPlaying(false);
                                     currentItem = null;
-                                    return; // TODO notify user
+                                    ui.handleException(R.string.media_play_error, e);
+                                    return;
                                 }
                             }
                         }

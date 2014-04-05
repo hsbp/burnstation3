@@ -10,4 +10,12 @@
     <string name="albums_order_popularity_week">Most popular albums this week</string>
     <string name="loading_param">Loading %s</string>
     <string name="downloaded"> [%d kB]</string>
+    <string name="media_fetch_error">Couldn\'t download media, try again or select another track.</string>
+    <string name="media_play_error">Couldn\'t play media, try again or select another track.</string>
+    <string name="api_track_construction_error">Couldn\'t construct track list from API result.</string>
+    <string name="api_track_extraction_error">Couldn\'t extract track list from API result.</string>
+    <string name="api_track_io_error">I/O error happened during API call to fetch tracks. Check network connectivity and try again.</string>
+    <string name="api_album_construction_error">Couldn\'t construct album list from API result.</string>
+    <string name="api_album_extraction_error">Couldn\'t extract album list from API result.</string>
+    <string name="api_album_io_error">I/O error happened during API call to fetch albums. Check network connectivity and try again.</string>
 </resources>
