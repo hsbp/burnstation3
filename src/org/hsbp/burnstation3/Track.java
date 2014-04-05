@@ -25,7 +25,7 @@ public class Track implements Runnable, API.Notifiable {
     public final static String STR_FMT = "%s (%d:%02d)";
     public final static String CACHE_DIR = "org.hsbp.burnstation3.track.cache";
     public final static String FILE_SUFFIX = ".mp3";
-    protected int downloadedBytes = 0;
+    protected int downloadedBytes;
     public final static int FULLY_DOWNLOADED = -1;
     protected final static int PLAY_TRESHOLD_BYTES = 300000;
     protected final Set<Notifiable> subscribers = new HashSet<Notifiable>();
