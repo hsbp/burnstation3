@@ -8,10 +8,7 @@ import android.os.AsyncTask;
 import android.widget.*;
 import android.view.View;
 import android.view.Window;
-import java.util.*;
-import java.net.*;
-import java.io.*;
-import org.json.*;
+import java.util.Map;
 
 public class Main extends Activity implements AdapterView.OnItemClickListener,
 	   AdapterView.OnItemSelectedListener {
@@ -82,7 +79,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
         currentAlbumZip = album.get(Album.ZIP);
         playerUi.showIndeterminateProgressDialog(getString(
                     R.string.loading_param, album.get(Album.NAME)));
-        new TrackListFillTask().execute(album.get(Album.ID));
+        new TrackListFillTask((ListView)findViewById(R.id.tracks),
+					this, playerUi).execute(album.get(Album.ID));
     }
 
     protected void enqueueTrack(Track track) {
@@ -95,33 +93,6 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
         AdapterView<?> av = (AdapterView<?>)findViewById(R.id.tracks);
         for (int i = 0; i < av.getCount(); i++) {
             onItemClick(av, null, i, 0);
-        }
-    }
-
-    private class TrackListFillTask extends AsyncTask<String, Void, List<Track>> {
-
-        @Override
-        protected List<Track> doInBackground(String... albumId) {
-            final JsonArrayProcessor<Track> jap = new JsonArrayProcessor<Track>(playerUi) {
-                public Track mapItem(final JSONObject item) throws JSONException, IOException {
-                    return Track.fromJSONObject(Main.this, item);
-                }
-            };
-            return jap
-                .setMessage(JsonArrayProcessor.State.CONSTUCTION, R.string.api_track_construction_error)
-                .setMessage(JsonArrayProcessor.State.EXTRACTION, R.string.api_track_extraction_error)
-                .setMessage(JsonArrayProcessor.State.IO, R.string.api_track_io_error)
-                .process("tracks", "&album_id=" + albumId[0]);
-        }
-
-        @Override
-        protected void onPostExecute(List<Track> result) {
-            if (!result.isEmpty()) {
-                ListView lv = (ListView)findViewById(R.id.tracks);
-                lv.setAdapter(new ArrayAdapter<Track>(Main.this,
-                            android.R.layout.simple_list_item_1, result));
-            }
-            playerUi.hideIndeterminateProgressDialog();
         }
     }
 
