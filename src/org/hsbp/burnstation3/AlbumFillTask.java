@@ -56,7 +56,7 @@ public class AlbumFillTask extends ListFillTask<Album.Order, Map<String, ?>>
 	public void onItemSelected(final AdapterView<?> parent, final View view,
 			final int position, final long id) {
 		final Album.Order order = (Album.Order)parent.getSelectedItem();
-		executeWithMessage(order, R.string.loading_param, order.toString());
+		executeWithMessage(R.string.loading_param, order.toString(), order);
 	}
 
 	public void onNothingSelected(AdapterView<?> parent) {}

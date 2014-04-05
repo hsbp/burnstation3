@@ -70,8 +70,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
 
     protected void loadAlbumTracks(Map<String, String> album) {
         currentAlbumZip = album.get(Album.ZIP);
-        trackListFiller.executeWithMessage(album.get(Album.ID),
-				R.string.loading_param, album.get(Album.NAME));
+        trackListFiller.executeWithMessage(R.string.loading_param,
+				album.get(Album.NAME), album.get(Album.ID));
     }
 
     protected void enqueueTrack(Track track) {

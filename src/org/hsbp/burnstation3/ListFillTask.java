@@ -18,7 +18,7 @@ public abstract class ListFillTask<K, V> extends AsyncTask<K, Void, List<V>> {
         this.ui = ui;
     }
 
-    protected void executeWithMessage(K value, int msg, String param) {
+    protected void executeWithMessage(int msg, String param, K... value) {
         ui.showIndeterminateProgressDialog(ctx.getString(msg, param));
         execute(value);
     }
