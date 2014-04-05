@@ -19,7 +19,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 {
 	public final static String TIME_FMT = "%d:%02d";
 	protected Player player;
-	protected boolean seeker_update_enabled = true;
+	protected boolean seekerUpdateEnabled = true;
 	protected String currentAlbumZip = null;
 	protected ProgressDialog progDlg = null;
 
@@ -100,7 +100,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     private class TrackListFillTask extends AsyncTask<String, Void, List<Track>> {
 
         @Override
-        protected List<Track> doInBackground(String... album_id) {
+        protected List<Track> doInBackground(String... albumId) {
             final JsonArrayProcessor<Track> jap = new JsonArrayProcessor<Track>(Main.this) {
                 public Track mapItem(final JSONObject item) throws JSONException, IOException {
                     return Track.fromJSONObject(Main.this, item);
@@ -110,7 +110,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
                 .setMessage(JsonArrayProcessor.State.CONSTUCTION, R.string.api_track_construction_error)
                 .setMessage(JsonArrayProcessor.State.EXTRACTION, R.string.api_track_extraction_error)
                 .setMessage(JsonArrayProcessor.State.IO, R.string.api_track_io_error)
-                .process("tracks", "&album_id=" + album_id[0]);
+                .process("tracks", "&album_id=" + albumId[0]);
         }
 
         @Override
@@ -153,7 +153,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     }
 
     public void updateElapsed(int time) {
-        if (seeker_update_enabled) {
+        if (seekerUpdateEnabled) {
             SeekBar sb = (SeekBar)findViewById(R.id.player_seek);
             sb.setProgress(time);
         }
@@ -176,11 +176,11 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     }
 
     public void onStartTrackingTouch(SeekBar seekBar) {
-        seeker_update_enabled = false;
+        seekerUpdateEnabled = false;
     }
 
     public void onStopTrackingTouch(SeekBar seekBar) {
-        seeker_update_enabled = true;
+        seekerUpdateEnabled = true;
     }
 
     public void showAlbumZipAccess(View view) {

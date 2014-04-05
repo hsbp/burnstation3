@@ -55,11 +55,11 @@ public class AlbumFillTask extends AsyncTask<Album.Order, Void, List<? extends M
 	@Override
 	protected void onPostExecute(List<? extends Map<String, ?>> result) {
 		if (!result.isEmpty()) {
-			final String[] map_from = {Album.NAME, Album.ARTIST_NAME, Album.IMAGE, Album.RELEASE_DATE};
-			final int[] map_to = {R.id.album_name, R.id.album_artist,
+			final String[] mapFrom = {Album.NAME, Album.ARTIST_NAME, Album.IMAGE, Album.RELEASE_DATE};
+			final int[] mapTo = {R.id.album_name, R.id.album_artist,
 				R.id.album_image, R.id.album_release_date};
 			target.setAdapter(new SimpleAdapter(ctx, result,
-						R.layout.albums_item, map_from, map_to));
+						R.layout.albums_item, mapFrom, mapTo));
 		}
 		ui.hideIndeterminateProgressDialog();
 	}
