@@ -8,4 +8,12 @@
     <string name="albums_order_popularity_month">Ehavi legnépszerűbb albumok</string>
     <string name="albums_order_popularity_week">Eheti legnépszerűbb albumok</string>
     <string name="loading_param">%s betöltése</string>
+    <string name="media_fetch_error">Sikertelen médialetöltés, próbálja újra, vagy válasszon másik számot.</string>
+    <string name="media_play_error">Sikertelen médialejátszás, próbálja újra, vagy válasszon másik számot.</string>
+    <string name="api_track_construction_error">Hiba történt az API válasz számlistává alakításakor.</string>
+    <string name="api_track_extraction_error">Hiba történt a számok kiolvasásakor az API válaszból.</string>
+    <string name="api_track_io_error">Hálózati hiba történt a számlista letöltésekor. Ellenőrizd a hálózati kapcsolatot.</string>
+    <string name="api_album_construction_error">Hiba történt az API válasz albumlistává alakításakor.</string>
+    <string name="api_album_extraction_error">Hiba történt a albumok kiolvasásakor az API válaszból.</string>
+    <string name="api_album_io_error">Hálózati hiba történt a albumlista letöltésekor. Ellenőrizd a hálózati kapcsolatot.</string>
 </resources>
