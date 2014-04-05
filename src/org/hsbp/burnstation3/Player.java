@@ -80,7 +80,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
                 }
             }).start();
             item.setPlaying(true);
-            ui.updateTotal(item.getTrack().getDuration());
+            ui.updateTotal(item.getTrack().duration);
         } else {
             performPlay();
         }
@@ -171,7 +171,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
 			int db = track.getDownloadedBytes();
             StringBuilder sb = new StringBuilder();
             if (playing) sb.append(track.isReadyToPlay() ? "\u25B6 " : "\u231B ");
-            sb.append(track.getArtistName()).append(": ").append(track.getName());
+            sb.append(track.artistName).append(": ").append(track.name);
             if (db != Track.FULLY_DOWNLOADED) sb.append(' ').append(
                     getContext().getString(R.string.downloaded, db / 1024));
             return sb.toString();

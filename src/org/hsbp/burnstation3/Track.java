@@ -13,10 +13,10 @@ import org.json.JSONObject;
 import org.json.JSONException;
 
 public class Track implements Runnable, API.Notifiable {
-    protected String artistName, name, id;
-    protected File localFile;
+    public final String artistName, name, id;
+    protected final File localFile;
     protected URL audio;
-    protected int duration;
+    public final int duration;
     protected final static Set<String> beingCached =
         Collections.synchronizedSet(new HashSet<String>());
     public final static String ID = "id";
@@ -33,20 +33,21 @@ public class Track implements Runnable, API.Notifiable {
     protected final Set<Notifiable> subscribers = new HashSet<Notifiable>();
     protected PlayerUI ui;
 
-    protected Track() {}
+    protected Track(String artistName, String name, String id, File localFile, int duration) {
+        this.artistName = artistName;
+        this.name = name;
+        this.id = id;
+        this.localFile = localFile;
+        this.duration = duration;
+    }
 
     public static Track fromJSONObject(Context ctx, JSONObject obj) throws JSONException,
            MalformedURLException {
-        final Track track = new Track();
-        track.id = obj.getString(ID);
         File cacheDir = new File(ctx.getCacheDir(), CACHE_DIR);
         cacheDir.mkdirs();
-        track.localFile = new File(cacheDir, track.id + FILE_SUFFIX);
-        track.name = obj.getString(NAME);
-        track.artistName = obj.getString(ARTIST_NAME);
-        track.duration = obj.getInt(DURATION);
-        track.audio = new URL(obj.getString(AUDIO));
-        return track;
+        final String trackId = obj.getString(ID);
+        return new Track(obj.getString(ARTIST_NAME), obj.getString(NAME), trackId,
+                new File(cacheDir, trackId + FILE_SUFFIX), obj.getInt(DURATION));
     }
 
     public String toString() {
@@ -99,17 +100,5 @@ public class Track implements Runnable, API.Notifiable {
     public Uri getUri() {
         run();
         return Uri.fromFile(localFile);
-    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public String getArtistName() {
-        return artistName;
-    }
-
-    public String getName() {
-        return name;
     }
 }
