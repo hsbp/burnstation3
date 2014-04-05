@@ -94,6 +94,10 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         handler.post(this);
     }
 
+    public synchronized boolean isPlaying() {
+        return mp == null ? false : mp.isPlaying();
+    }
+
     public synchronized void run() {
         if (mp == null) return;
         try {

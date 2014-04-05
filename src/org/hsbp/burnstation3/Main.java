@@ -16,6 +16,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
 	protected String currentAlbumZip;
 	protected TrackListFillTask trackListFiller;
 	protected PlayerUI playerUi;
+	protected boolean wasPlaying;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -29,6 +30,19 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
 		initAlbumsOrder();
 		initListViewClickListeners();
 	}
+
+    @Override
+    protected void onPause() {
+        wasPlaying = player.isPlaying();
+        if (wasPlaying) pauseClicked(null);
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (wasPlaying) playClicked(null);
+    }
 
 	public void initPlayer() {
 		final ListView lv = (ListView)findViewById(R.id.playlist);
