@@ -21,10 +21,12 @@ public abstract class JsonArrayProcessor<E> {
 	}
 
 	public List<E> process(String resource, String parameters) {
-		final List<E> result = new ArrayList<E>();
+		final ArrayList<E> result = new ArrayList<E>();
 		try {
 			final JSONArray array = API.getArray(resource, parameters);
-			for (int i = 0; i < array.length(); i++) {
+			final int count = array.length();
+			result.ensureCapacity(count);
+			for (int i = 0; i < count; i++) {
 				try {
 					result.add(mapItem(array.getJSONObject(i)));
 				} catch (JSONException je) {
