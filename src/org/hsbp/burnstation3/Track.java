@@ -76,7 +76,7 @@ public class Track implements Runnable, API.Notifiable {
         }
     }
 
-    public synchronized void completed(File target) {
+    public synchronized void completed() {
         downloaded(FULLY_DOWNLOADED);
     }
 
