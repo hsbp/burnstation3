@@ -35,8 +35,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 		playerUi = new PlayerUiImpl(this);
 		player = new Player(this, playerUi);
 		lv.setAdapter(player);
-        trackListFiller = new TrackListFillTask((ListView)findViewById(R.id.tracks), this, playerUi);
-		albumListFiller = new AlbumFillTask((ListView)findViewById(R.id.albums), this, playerUi);
+        trackListFiller = new TrackListFillTask(this, playerUi);
+		albumListFiller = new AlbumFillTask(this, playerUi);
 	}
 
 	public void initAlbumsOrder() {

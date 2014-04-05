@@ -1,31 +1,23 @@
 package org.hsbp.burnstation3;
 
-import android.content.Context;
-import android.os.AsyncTask;
+import android.app.Activity;
 import android.widget.*;
 import java.io.*;
 import java.net.URL;
 import java.util.*;
 import org.json.*;
 
-public class AlbumFillTask extends AsyncTask<Album.Order, Void, List<? extends Map<String, ?>>> {
+public class AlbumFillTask extends ListFillTask<Album.Order, Map<String, ?>> {
 
 	public final static String ALBUM_COVER_CACHE_DIR = "org.hsbp.burnstation3.album_cover.cache";
 	public final static String ALBUM_COVER_FILE_SUFFIX = ".jpg";
 
-	protected final ListView target;
-	protected final Context ctx;
-	protected final PlayerUI ui;
-
-	public AlbumFillTask(ListView target, Context ctx, PlayerUI ui) {
-		super();
-		this.target = target;
-		this.ctx = ctx;
-		this.ui = ui;
+	public AlbumFillTask(final Activity activity, final PlayerUI ui) {
+		super(R.id.albums, activity, ui);
 	}
 
 	@Override
-	protected List<? extends Map<String, ?>> doInBackground(Album.Order... order) {
+	protected List<Map<String, ?>> doInBackground(final Album.Order... order) {
 		final File cacheDir = new File(ctx.getCacheDir(), ALBUM_COVER_CACHE_DIR);
 		cacheDir.mkdirs();
 		final JsonArrayProcessor<Map<String, ?>> jap = new JsonArrayProcessor<Map<String, ?>>(ui) {
@@ -53,12 +45,12 @@ public class AlbumFillTask extends AsyncTask<Album.Order, Void, List<? extends M
 	}
 
 	@Override
-	protected void onPostExecute(List<? extends Map<String, ?>> result) {
+	protected void onPostExecute(List<Map<String, ?>> result) {
 		if (!result.isEmpty()) {
 			final String[] mapFrom = {Album.NAME, Album.ARTIST_NAME, Album.IMAGE, Album.RELEASE_DATE};
 			final int[] mapTo = {R.id.album_name, R.id.album_artist,
 				R.id.album_image, R.id.album_release_date};
-			target.setAdapter(new SimpleAdapter(ctx, result,
+			view.setAdapter(new SimpleAdapter(ctx, result,
 						R.layout.albums_item, mapFrom, mapTo));
 		}
 		ui.hideIndeterminateProgressDialog();

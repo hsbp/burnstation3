@@ -1,22 +1,15 @@
 package org.hsbp.burnstation3;
 
-import android.content.Context;
-import android.os.AsyncTask;
+import android.app.Activity;
 import android.widget.*;
 import java.util.*;
 import java.io.*;
 import org.json.*;
 
-public class TrackListFillTask extends AsyncTask<String, Void, List<Track>> {
-    
-    protected final ListView view;
-    protected final Context ctx;
-    protected final PlayerUI ui;
+public class TrackListFillTask extends ListFillTask<String, Track> {
 
-    public TrackListFillTask(final ListView view, final Context ctx, final PlayerUI ui) {
-        this.view = view;
-        this.ctx = ctx;
-        this.ui = ui;
+    public TrackListFillTask(final Activity activity, final PlayerUI ui) {
+        super(R.id.tracks, activity, ui);
     }
 
     @Override
