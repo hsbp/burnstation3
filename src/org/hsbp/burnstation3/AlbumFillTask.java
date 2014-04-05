@@ -26,37 +26,30 @@ public class AlbumFillTask extends AsyncTask<Album.Order, Void, List<? extends M
 
 	@Override
 	protected List<? extends Map<String, ?>> doInBackground(Album.Order... order) {
-		List<Map<String, Object>> albums = new ArrayList<Map<String, Object>>();
-		try {
-			JSONArray api_result = API.getArray("albums", "&imagesize=75&order=" + order[0].getValue());
-			File cacheDir = new File(ctx.getCacheDir(), ALBUM_COVER_CACHE_DIR);
-			cacheDir.mkdirs();
-			for (int i = 0; i < api_result.length(); i++) {
-				try {
-					Map<String, Object> album = new Album();
-					JSONObject item = api_result.getJSONObject(i);
-					for (String field : Album.FIELDS) {
-						album.put(field, item.getString(field));
-					}
-					try {
-						File cover = new File(cacheDir,
-								(String)album.get(Album.ID) + ALBUM_COVER_FILE_SUFFIX);
-						API.download(new URL(item.getString(Album.IMAGE)), cover, null);
-						album.put(Album.IMAGE, cover.getAbsolutePath());
-					} catch (IOException ioe) {
-						album.put(Album.IMAGE, R.drawable.burnstation);
-					}
-					albums.add(album);
-				} catch (JSONException je) {
-					ui.handleException(R.string.api_album_construction_error, je);
+		final File cacheDir = new File(ctx.getCacheDir(), ALBUM_COVER_CACHE_DIR);
+		cacheDir.mkdirs();
+		final JsonArrayProcessor<Map<String, ?>> jap = new JsonArrayProcessor<Map<String, ?>>(ui) {
+			public Map<String, ?> mapItem(final JSONObject item) throws JSONException, IOException {
+				final Map<String, Object> album = new Album();
+				for (String field : Album.FIELDS) {
+					album.put(field, item.getString(field));
 				}
+				try {
+					final File cover = new File(cacheDir,
+							(String)album.get(Album.ID) + ALBUM_COVER_FILE_SUFFIX);
+					API.download(new URL(item.getString(Album.IMAGE)), cover, null);
+					album.put(Album.IMAGE, cover.getAbsolutePath());
+				} catch (IOException ioe) {
+					album.put(Album.IMAGE, R.drawable.burnstation);
+				}
+				return album;
 			}
-		} catch (JSONException je) {
-			ui.handleException(R.string.api_album_extraction_error, je);
-		} catch (IOException ioe) {
-			ui.handleException(R.string.api_album_io_error, ioe);
-		}
-		return albums;
+		};
+		return jap
+			.setMessage(JsonArrayProcessor.State.CONSTUCTION, R.string.api_album_construction_error)
+			.setMessage(JsonArrayProcessor.State.EXTRACTION, R.string.api_album_extraction_error)
+			.setMessage(JsonArrayProcessor.State.IO, R.string.api_album_io_error)
+			.process("albums", "&imagesize=75&order=" + order[0].getValue());
 	}
 
 	@Override

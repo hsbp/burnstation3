@@ -101,23 +101,16 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
         @Override
         protected List<Track> doInBackground(String... album_id) {
-            List<Track> tracks = new ArrayList<Track>();
-            try {
-                JSONArray api_result = API.getArray("tracks", "&album_id=" + album_id[0]);
-                for (int i = 0; i < api_result.length(); i++) {
-                    try {
-                        JSONObject item = api_result.getJSONObject(i);
-                        tracks.add(Track.fromJSONObject(Main.this, item));
-                    } catch (JSONException je) {
-                        handleException(R.string.api_track_construction_error, je);
-                    }
+            final JsonArrayProcessor<Track> jap = new JsonArrayProcessor<Track>(Main.this) {
+                public Track mapItem(final JSONObject item) throws JSONException, IOException {
+                    return Track.fromJSONObject(Main.this, item);
                 }
-            } catch (JSONException je) {
-                handleException(R.string.api_track_extraction_error, je);
-            } catch (IOException ioe) {
-                handleException(R.string.api_track_io_error, ioe);
-            }
-            return tracks;
+            };
+            return jap
+                .setMessage(JsonArrayProcessor.State.CONSTUCTION, R.string.api_track_construction_error)
+                .setMessage(JsonArrayProcessor.State.EXTRACTION, R.string.api_track_extraction_error)
+                .setMessage(JsonArrayProcessor.State.IO, R.string.api_track_io_error)
+                .process("tracks", "&album_id=" + album_id[0]);
         }
 
         @Override
