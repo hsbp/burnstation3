@@ -135,6 +135,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
     }
 
     public void add(Track track) {
+        track.prepare(ui);
         add(new Item(track));
     }
 

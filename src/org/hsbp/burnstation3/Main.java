@@ -14,7 +14,6 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 	   AdapterView.OnItemSelectedListener {
 	protected Player player;
 	protected String currentAlbumZip;
-	protected PlayerUI playerUi;
 	protected TrackListFillTask trackListFiller;
 	protected AlbumFillTask albumListFiller;
 
@@ -32,7 +31,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 
 	public void initPlayer() {
 		final ListView lv = (ListView)findViewById(R.id.playlist);
-		playerUi = new PlayerUiImpl(this);
+		final PlayerUI playerUi = new PlayerUiImpl(this);
 		player = new Player(this, playerUi);
 		lv.setAdapter(player);
         trackListFiller = new TrackListFillTask(this, playerUi);
@@ -85,7 +84,6 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
     }
 
     protected void enqueueTrack(Track track) {
-        track.prepare(playerUi);
         player.add(track);
         playClicked(null);
     }
