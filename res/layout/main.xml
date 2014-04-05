@@ -30,18 +30,25 @@
 		android:layout_weight="1"
         android:gravity="center"
         >
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/download_full_album"
-            android:onClick="showAlbumZipAccess"
-            />
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/enqueue_all_tracks"
-            android:onClick="enqueueAllTracks"
-            />
+            android:gravity="center"
+            >
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/download"
+                android:onClick="showAlbumZipAccess"
+                />
+            <ImageButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/enqueue"
+                android:onClick="enqueueAllTracks"
+                />
+        </LinearLayout>
         <ListView
             android:id="@+id/tracks"
             android:layout_width="fill_parent"

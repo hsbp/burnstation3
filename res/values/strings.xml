@@ -2,8 +2,6 @@
 <resources>
     <string name="app_name">BurnStation</string>
     <string name="release_date">Release date:</string>
-    <string name="download_full_album">Download full album</string>
-    <string name="enqueue_all_tracks">Enqueue all tracks</string>
     <string name="albums_order_releasedate_desc">Latest albums</string>
     <string name="albums_order_popularity_total">Most popular albums so far</string>
     <string name="albums_order_popularity_month">Most popular albums this month</string>

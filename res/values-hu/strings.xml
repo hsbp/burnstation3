@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="release_date">Megjelenés dátuma:</string>
-    <string name="download_full_album">Teljes album letöltése</string>
-    <string name="enqueue_all_tracks">Összes számot a listába</string>
     <string name="albums_order_releasedate_desc">Legújabb albumok</string>
     <string name="albums_order_popularity_total">Legnépszerűbb albumok</string>
     <string name="albums_order_popularity_month">Ehavi legnépszerűbb albumok</string>
