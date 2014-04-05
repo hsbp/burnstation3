@@ -7,4 +7,5 @@ public interface PlayerUI {
     public void hideIndeterminateProgressDialog();
     public void handleException(int message, Exception e);
     public void setPlayer(Player p);
+    public boolean isRepeatEnabled();
 }

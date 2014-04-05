@@ -14,4 +14,5 @@
     <string name="api_album_construction_error">Hiba történt az API válasz albumlistává alakításakor.</string>
     <string name="api_album_extraction_error">Hiba történt a albumok kiolvasásakor az API válaszból.</string>
     <string name="api_album_io_error">Hálózati hiba történt a albumlista letöltésekor. Ellenőrizd a hálózati kapcsolatot.</string>
+    <string name="repeat">Ismétlés</string>
 </resources>

@@ -41,12 +41,20 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/download"
                 android:onClick="showAlbumZipAccess"
+                android:layout_marginRight="25px"
                 />
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/enqueue"
                 android:onClick="enqueueAllTracks"
+                android:layout_marginRight="25px"
+                />
+            <Switch
+                android:id="@+id/repeat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@+string/repeat"
                 />
         </LinearLayout>
         <ListView

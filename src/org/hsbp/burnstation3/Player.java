@@ -129,6 +129,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
     public synchronized void playNextTrack() {
         if (currentItem == null) return;
         int pos = getPosition(currentItem) + 1;
+        if ((pos == getCount()) && ui.isRepeatEnabled()) pos = 0;
         if (pos < getCount()) {
             play(getItem(pos), true);
         }

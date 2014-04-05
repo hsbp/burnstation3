@@ -16,4 +16,5 @@
     <string name="api_album_construction_error">Couldn\'t construct album list from API result.</string>
     <string name="api_album_extraction_error">Couldn\'t extract album list from API result.</string>
     <string name="api_album_io_error">I/O error happened during API call to fetch albums. Check network connectivity and try again.</string>
+    <string name="repeat">Repeat</string>
 </resources>

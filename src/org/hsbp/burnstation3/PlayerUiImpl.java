@@ -75,4 +75,9 @@ public class PlayerUiImpl implements PlayerUI, SeekBar.OnSeekBarChangeListener {
 		progDlg.dismiss();
 		progDlg = null;
 	}
+
+	public boolean isRepeatEnabled() {
+		final CompoundButton cb = (CompoundButton)activity.findViewById(R.id.repeat);
+		return cb.isChecked();
+	}
 }
