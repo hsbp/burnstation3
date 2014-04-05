@@ -72,22 +72,28 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
         Object item = parent.getItemAtPosition(position);
         switch (parent.getId()) {
             case R.id.albums:
-                Map<String, String> album = (Map<String, String>)item;
-                currentAlbumZip = album.get(Album.ZIP);
-                new TrackListFillTask().execute(album.get(Album.ID));
-                showIndeterminateProgressDialog(getString(
-                            R.string.loading_param, album.get(Album.NAME)));
+                loadAlbumTracks((Map<String, String>)item);
                 break;
             case R.id.tracks:
-                Track track = (Track)item;
-                track.prepare(this);
-                player.add(track);
-                playClicked(view);
+                enqueueTrack((Track)item);
                 break;
             case R.id.playlist:
                 player.play((Player.Item)item, true);
                 break;
         }
+    }
+
+    protected void loadAlbumTracks(Map<String, String> album) {
+        currentAlbumZip = album.get(Album.ZIP);
+        showIndeterminateProgressDialog(getString(
+                    R.string.loading_param, album.get(Album.NAME)));
+        new TrackListFillTask().execute(album.get(Album.ID));
+    }
+
+    protected void enqueueTrack(Track track) {
+        track.prepare(this);
+        player.add(track);
+        playClicked(null);
     }
 
     public void enqueueAllTracks(View view) {
