@@ -22,4 +22,12 @@ public abstract class ListFillTask<K, V> extends AsyncTask<K, Void, List<V>> {
         ui.showIndeterminateProgressDialog(ctx.getString(msg, param));
         execute(value);
     }
+
+    @Override
+    protected void onPostExecute(final List<V> result) {
+        if (!result.isEmpty()) view.setAdapter(getAdapter(result));
+        ui.hideIndeterminateProgressDialog();
+    }
+
+    protected abstract BaseAdapter getAdapter(List<V> result);
 }

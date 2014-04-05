@@ -26,12 +26,7 @@ public class TrackListFillTask extends ListFillTask<String, Track> {
             .process("tracks", "&album_id=" + albumId[0]);
     }
 
-    @Override
-    protected void onPostExecute(List<Track> result) {
-        if (!result.isEmpty()) {
-            view.setAdapter(new ArrayAdapter<Track>(ctx,
-                        android.R.layout.simple_list_item_1, result));
-        }
-        ui.hideIndeterminateProgressDialog();
+    protected BaseAdapter getAdapter(final List<Track> result) {
+        return new ArrayAdapter<Track>(ctx, android.R.layout.simple_list_item_1, result);
     }
 }

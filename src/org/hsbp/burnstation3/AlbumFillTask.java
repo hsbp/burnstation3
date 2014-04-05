@@ -44,15 +44,10 @@ public class AlbumFillTask extends ListFillTask<Album.Order, Map<String, ?>> {
 			.process("albums", "&imagesize=75&order=" + order[0].getValue());
 	}
 
-	@Override
-	protected void onPostExecute(List<Map<String, ?>> result) {
-		if (!result.isEmpty()) {
-			final String[] mapFrom = {Album.NAME, Album.ARTIST_NAME, Album.IMAGE, Album.RELEASE_DATE};
-			final int[] mapTo = {R.id.album_name, R.id.album_artist,
-				R.id.album_image, R.id.album_release_date};
-			view.setAdapter(new SimpleAdapter(ctx, result,
-						R.layout.albums_item, mapFrom, mapTo));
-		}
-		ui.hideIndeterminateProgressDialog();
+	protected BaseAdapter getAdapter(final List<Map<String, ?>> result) {
+		final String[] mapFrom = {Album.NAME, Album.ARTIST_NAME, Album.IMAGE, Album.RELEASE_DATE};
+		final int[] mapTo = {R.id.album_name, R.id.album_artist,
+			R.id.album_image, R.id.album_release_date};
+		return new SimpleAdapter(ctx, result, R.layout.albums_item, mapFrom, mapTo);
 	}
 }
