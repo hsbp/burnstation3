@@ -26,8 +26,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
     public synchronized void play(final Item item, boolean forceReplace) {
         if (mp != null && item != currentItem && forceReplace) {
             currentItem.setPlaying(false);
-            mp.release();
-            mp = null;
+            releaseMediaPlayer();
         }
         if (mp == null) {
             currentItem = item;
@@ -45,10 +44,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
 								performPlay();
 								return;
                             } catch (Exception e) {
-								if (mp != null) {
-									mp.release();
-									mp = null;
-								}
+								releaseMediaPlayer();
 								try {
 	                                Thread.sleep(200);
 								} catch (InterruptedException ie) {}
@@ -148,12 +144,16 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
     }
 
     public synchronized void clear() {
+        releaseMediaPlayer();
+        ui.updateElapsed(0);
+        super.clear();
+    }
+
+    protected synchronized void releaseMediaPlayer() {
         if (mp != null) {
             mp.release();
             mp = null;
         }
-        ui.updateElapsed(0);
-        super.clear();
     }
 
     protected class Item implements Track.Notifiable, Runnable {
