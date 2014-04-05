@@ -41,14 +41,14 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/download"
                 android:onClick="showAlbumZipAccess"
-                android:layout_marginRight="25px"
+                android:layout_marginRight="10px"
                 />
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/enqueue"
                 android:onClick="enqueueAllTracks"
-                android:layout_marginRight="25px"
+                android:layout_marginRight="10px"
                 />
             <Switch
                 android:id="@+id/repeat"
@@ -81,28 +81,28 @@
                 android:layout_height="wrap_content"
                 android:src="@drawable/av_previous"
                 android:onClick="previousClicked"
-                android:layout_marginRight="25px"
+                android:layout_marginRight="10px"
                 />
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/av_play"
                 android:onClick="playClicked"
-                android:layout_marginRight="25px"
+                android:layout_marginRight="10px"
                 />
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/av_pause"
                 android:onClick="pauseClicked"
-                android:layout_marginRight="25px"
+                android:layout_marginRight="10px"
                 />
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/av_next"
                 android:onClick="nextClicked"
-                android:layout_marginRight="25px"
+                android:layout_marginRight="10px"
                 />
             <ImageButton
                 android:layout_width="wrap_content"
