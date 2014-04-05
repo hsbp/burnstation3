@@ -20,8 +20,8 @@ public class Main extends Activity implements AdapterView.OnItemClickListener,
 	public final static String TIME_FMT = "%d:%02d";
 	protected Player player;
 	protected boolean seekerUpdateEnabled = true;
-	protected String currentAlbumZip = null;
-	protected ProgressDialog progDlg = null;
+	protected String currentAlbumZip;
+	protected ProgressDialog progDlg;
 
 	/** Called when the activity is first created. */
 	@Override
