@@ -12,8 +12,8 @@ import java.util.ArrayList;
 public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         MediaPlayer.OnCompletionListener {
 
-    protected MediaPlayer mp = null;
-    protected Item currentItem = null;
+    protected MediaPlayer mp;
+    protected Item currentItem;
     protected final PlayerUI ui;
     protected final Handler handler = new Handler();
 
