@@ -10,8 +10,8 @@ import org.json.*;
 
 public class AlbumFillTask extends AsyncTask<Album.Order, Void, List<? extends Map<String, ?>>> {
 
-    public final static String ALBUM_COVER_CACHE_DIR = "org.hsbp.burnstation3.album_cover.cache";
-    public final static String ALBUM_COVER_FILE_SUFFIX = ".jpg";
+	public final static String ALBUM_COVER_CACHE_DIR = "org.hsbp.burnstation3.album_cover.cache";
+	public final static String ALBUM_COVER_FILE_SUFFIX = ".jpg";
 
 	protected final ListView target;
 	protected final Context ctx;
