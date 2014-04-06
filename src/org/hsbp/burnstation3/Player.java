@@ -142,7 +142,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
             final Item i = new Item(track);
             add(i);
             if (first) {
-                if (mp == null || !mp.isPlaying()) play(i, true);
+                if (!isPlaying()) play(i, true);
                 first = false;
             }
         }
