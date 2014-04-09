@@ -3,7 +3,6 @@ package org.hsbp.burnstation3;
 import android.graphics.Bitmap;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.qrcode.QRCodeWriter;
-import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 

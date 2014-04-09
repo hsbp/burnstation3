@@ -2,7 +2,6 @@ package org.hsbp.burnstation3;
 
 import android.content.Context;
 import android.net.Uri;
-import android.os.AsyncTask;
 import java.io.*;
 import java.net.URL;
 import java.net.MalformedURLException;

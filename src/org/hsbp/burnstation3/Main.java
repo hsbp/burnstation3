@@ -1,10 +1,7 @@
 package org.hsbp.burnstation3;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
 import android.os.Bundle;
-import android.os.AsyncTask;
 import android.widget.*;
 import android.view.View;
 import android.view.Window;

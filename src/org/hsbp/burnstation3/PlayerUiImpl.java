@@ -2,7 +2,6 @@ package org.hsbp.burnstation3;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.widget.*;
 
 public class PlayerUiImpl implements PlayerUI, SeekBar.OnSeekBarChangeListener {

@@ -2,8 +2,6 @@ package org.hsbp.burnstation3;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.BitmapDrawable;

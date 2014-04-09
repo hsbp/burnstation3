@@ -3,7 +3,6 @@ package org.hsbp.burnstation3;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.media.AudioManager;
-import android.net.Uri;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.widget.ArrayAdapter;
