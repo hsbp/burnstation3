@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.os.PowerManager;
 import android.widget.ArrayAdapter;
-import java.util.ArrayList;
+import java.util.*;
 
 public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         MediaPlayer.OnCompletionListener {
@@ -161,17 +161,17 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         }
     }
 
-    protected class Item implements Track.Notifiable, Runnable {
+    protected class Item implements Observer, Runnable {
         protected final Track track;
         protected boolean playing = false;
         protected final Handler handler = new Handler();
 
         public Item(Track track) {
             this.track = track;
-            track.subscribe(this);
+            track.addObserver(this);
         }
 
-        public void trackInfoChanged() {
+        public void update(Observable observable, Object data) {
             handler.post(this);
         }
 

@@ -6,13 +6,11 @@ import android.os.AsyncTask;
 import java.io.*;
 import java.net.URL;
 import java.net.MalformedURLException;
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Collections;
+import java.util.*;
 import org.json.JSONObject;
 import org.json.JSONException;
 
-public class Track implements Runnable, API.Notifiable {
+public class Track extends Observable implements Runnable, API.Notifiable {
     public final String artistName, name, id;
     protected final File localFile;
     protected final URL audio;
@@ -30,7 +28,6 @@ public class Track implements Runnable, API.Notifiable {
     protected int downloadedBytes;
     public final static int FULLY_DOWNLOADED = -1;
     protected final static int PLAY_TRESHOLD_BYTES = 300000;
-    protected final Set<Notifiable> subscribers = new HashSet<Notifiable>();
     protected PlayerUI ui;
 
     protected Track(String artistName, String name, String id, URL audio, File localFile, int duration) {
@@ -74,21 +71,12 @@ public class Track implements Runnable, API.Notifiable {
 
     public synchronized void downloaded(int bytes) {
         downloadedBytes = bytes;
-        for (Notifiable subscriber : subscribers) {
-            subscriber.trackInfoChanged();
-        }
+        setChanged();
+        notifyObservers();
     }
 
     public synchronized void completed() {
         downloaded(FULLY_DOWNLOADED);
-    }
-
-    public synchronized void subscribe(Notifiable subscriber) {
-        subscribers.add(subscriber);
-    }
-
-    public interface Notifiable {
-        public void trackInfoChanged();
     }
 
     public int getDownloadedBytes() {
