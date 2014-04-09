@@ -8,21 +8,21 @@ import android.os.PowerManager;
 import android.widget.ArrayAdapter;
 import java.util.*;
 
-public class Player extends ArrayAdapter<Player.Item> implements Runnable,
+public class Player extends ArrayAdapter<PlaylistItem> implements Runnable,
         MediaPlayer.OnCompletionListener {
 
     protected MediaPlayer mp;
-    protected Item currentItem;
+    protected PlaylistItem currentItem;
     protected final PlayerUI ui;
     protected final Handler handler = new Handler();
 
     public Player(Context ctx, PlayerUI ui) {
-        super(ctx, android.R.layout.simple_list_item_1, new ArrayList<Player.Item>());
+        super(ctx, android.R.layout.simple_list_item_1, new ArrayList<PlaylistItem>());
         ui.setPlayer(this);
         this.ui = ui;
     }
 
-    public synchronized void play(final Item item, boolean forceReplace) {
+    public synchronized void play(final PlaylistItem item, boolean forceReplace) {
         if (mp != null && item != currentItem && forceReplace) {
             currentItem.setPlaying(false);
             releaseMediaPlayer();
@@ -138,7 +138,7 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         boolean first = true;
         for (final Track track : tracks) {
             track.prepare(ui);
-            final Item i = new Item(track);
+            final PlaylistItem i = new PlaylistItem(track, this);
             add(i);
             if (first) {
                 if (!isPlaying()) play(i, true);
@@ -157,47 +157,6 @@ public class Player extends ArrayAdapter<Player.Item> implements Runnable,
         if (mp != null) {
             mp.release();
             mp = null;
-        }
-    }
-
-    protected class Item implements Observer, Runnable {
-        protected final Track track;
-        protected boolean playing = false;
-        protected final Handler handler = new Handler();
-
-        public Item(Track track) {
-            this.track = track;
-            track.addObserver(this);
-        }
-
-        public void update(Observable observable, Object data) {
-            handler.post(this);
-        }
-
-        public void run() {
-            notifyDataSetChanged();
-        }
-
-        public Track getTrack() {
-            return track;
-        }
-
-        public void setPlaying(boolean value) {
-            if (value != playing) {
-                playing = value;
-                handler.post(this);
-            }
-        }
-
-        @Override
-        public String toString() {
-			int db = track.getDownloadedBytes();
-            StringBuilder sb = new StringBuilder();
-            if (playing) sb.append(track.isReadyToPlay() ? "\u25B6 " : "\u231B ");
-            sb.append(track.artistName).append(": ").append(track.name);
-            if (db != Track.FULLY_DOWNLOADED) sb.append(' ').append(
-                    getContext().getString(R.string.downloaded, db / 1024));
-            return sb.toString();
         }
     }
 }

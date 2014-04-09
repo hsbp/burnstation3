@@ -75,7 +75,7 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
                 player.add(Collections.singletonList((Track)item));
                 break;
             case R.id.playlist:
-                player.play((Player.Item)item, true);
+                player.play((PlaylistItem)item, true);
                 break;
         }
     }
