@@ -44,8 +44,8 @@ public class API {
     }
 
     public interface Notifiable {
-        public void downloaded(int bytes);
-        public void completed();
+        void downloaded(int bytes);
+        void completed();
     }
 
     public static JSONArray getArray(String resource, String parameters)
