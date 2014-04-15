@@ -86,6 +86,7 @@ public class Player extends ArrayAdapter<PlaylistItem> implements Runnable,
         try {
             if (mp != null) mp.pause();
         } catch (IllegalStateException ise) {}
+        ui.setState(PlayerState.PAUSED);
     }
 
     protected synchronized void performPlay() {
@@ -101,7 +102,10 @@ public class Player extends ArrayAdapter<PlaylistItem> implements Runnable,
         if (mp == null) return;
         try {
             ui.updateElapsed(mp.getCurrentPosition());
-            if (mp.isPlaying()) handler.postDelayed(this, 200);
+            if (isPlaying()) {
+                handler.postDelayed(this, 200);
+                ui.setState(PlayerState.PLAYING);
+            }
         } catch (IllegalStateException ise) {}
     }
 
@@ -131,6 +135,8 @@ public class Player extends ArrayAdapter<PlaylistItem> implements Runnable,
         if ((pos == getCount()) && ui.isRepeatEnabled()) pos = 0;
         if (pos < getCount()) {
             play(getItem(pos), true);
+        } else {
+            ui.setState(PlayerState.PAUSED);
         }
     }
 

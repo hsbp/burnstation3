@@ -8,4 +8,6 @@ public interface PlayerUI {
     void handleException(int message, Exception e);
     void setPlayer(Player p);
     boolean isRepeatEnabled();
+    void setState(PlayerState value);
+    PlayerState getState();
 }

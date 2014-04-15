@@ -8,14 +8,32 @@ public class PlayerUiImpl implements PlayerUI, SeekBar.OnSeekBarChangeListener {
 	protected final Activity activity;
 	public final static String TIME_FMT = "%d:%02d";
 	protected boolean seekerUpdateEnabled = true;
+	protected PlayerState state;
 	protected SeekBar sb;
 	protected Player player;
 	protected ProgressDialog progDlg;
 
 	public PlayerUiImpl(Activity activity) {
 		this.activity = activity;
+		setState(PlayerState.PAUSED);
 		sb = (SeekBar)activity.findViewById(R.id.player_seek);
 		sb.setOnSeekBarChangeListener(this);
+	}
+
+	public synchronized void setState(final PlayerState value) {
+		if (state == value) return;
+		state = value;
+		activity.runOnUiThread(new Runnable() {
+			@Override
+			public void run() {
+				final ImageButton btn = (ImageButton)activity.findViewById(R.id.play_pause);
+				btn.setImageResource(state.buttonIcon);
+			}
+		});
+	}
+
+	public PlayerState getState() {
+		return state;
 	}
 
     public void handleException(final int message, final Exception e) {

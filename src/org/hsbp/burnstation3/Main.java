@@ -31,14 +31,14 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
     @Override
     protected void onPause() {
         wasPlaying = player.isPlaying();
-        if (wasPlaying) pauseClicked(null);
+        if (wasPlaying) playPauseClicked(null);
         super.onPause();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (wasPlaying) playClicked(null);
+        if (wasPlaying) playPauseClicked(null);
     }
 
 	public void initPlayer() {
@@ -94,13 +94,16 @@ public class Main extends Activity implements AdapterView.OnItemClickListener {
         player.add(tracks);
     }
 
-    public void playClicked(View view) {
+    public void playPauseClicked(View view) {
         if (player.getCount() == 0) return;
-        player.play(player.getItem(0), false);
-    }
-
-    public void pauseClicked(View view) {
-        player.pause();
+        switch (playerUi.getState()) {
+            case PLAYING:
+                player.pause();
+                break;
+            case PAUSED:
+                player.play(player.getItem(0), false);
+                break;
+        }
     }
 
     public void previousClicked(View view) {

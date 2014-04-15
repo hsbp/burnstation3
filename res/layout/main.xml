@@ -86,15 +86,8 @@
             <ImageButton
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/av_play"
-                android:onClick="playClicked"
-                android:layout_marginRight="10px"
-                />
-            <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/av_pause"
-                android:onClick="pauseClicked"
+                android:onClick="playPauseClicked"
+                android:id="@+id/play_pause"
                 android:layout_marginRight="10px"
                 />
             <ImageButton
